@@ -14,6 +14,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
+// #define SQUIRREL_TESTING
+
 namespace Launcher
 {
 
@@ -24,14 +26,32 @@ namespace Launcher
 		private string gamePath;
 
 		private const float PROCESS_TIMEOUT = 30;
+#if SQUIRREL_TESTING
+		private const string DEFAULT_GAME_PATH = "F:/Projects/Git Repos/SquirrelTest/x64/Debug/SquirrelTest.exe"; // "C:/Program Files (x86)/Origin Games/Titanfall2/Titanfall2.exe";
+		private const string ORIGIN_LAUNCH_TTF_COMMAND = @"F:\Projects\Git Repos\SquirrelTest\x64\Debug\SquirrelTest.exe"; //"origin://LaunchGame/Origin.OFR.50.0001464";
+#else
+		private const string DEFAULT_GAME_PATH = "C:/Program Files (x86)/Origin Games/Titanfall2/Titanfall2.exe";
 		private const string ORIGIN_LAUNCH_TTF_COMMAND = "origin://LaunchGame/Origin.OFR.50.0001464";
+#endif
 		private const string DLL_NAME = "TitanfallSDK.dll";
 		private const string DLL_FUNC_CONSOLE = "InitializeSDKConsole";
 		private const string DLL_FUNC_INIT = "InitializeSDK";
 
+		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
+
 		public SpyglassLauncher()
 		{
 			InitializeComponent();
+
+			txtGamePath.Text = DEFAULT_GAME_PATH;
+
+			foreach ( var ModPath in Directory.GetDirectories( "Mods" ) )
+			{
+				int Index = listMods.Items.Add( ModPath );
+				ModJson NewMod = new ModJson();
+				NewMod.Load( ModPath );
+				DisplayedMods.Add( Index, NewMod );
+			}
 		}
 		
 		// Injection
@@ -48,8 +68,7 @@ namespace Launcher
 
 		private void PerformLaunch(bool performInjection = true)
 		{
-			Process.Start(new ProcessStartInfo(ORIGIN_LAUNCH_TTF_COMMAND));
-
+ 			Process.Start(new ProcessStartInfo(ORIGIN_LAUNCH_TTF_COMMAND));
 			if (performInjection)
 			{
 				btnLaunchGame.Enabled = false;
@@ -154,6 +173,25 @@ namespace Launcher
 					btnLaunchGame.Text = "Launch Game";
 					btnLaunchGame.Enabled = true;
 			}));
+		}
+
+		private void btnWriteMods_Click( object sender, EventArgs e )
+		{
+			InjectMods();
+		}
+
+		private async void InjectMods()
+		{
+			foreach( var DisplayedMod in DisplayedMods )
+			{
+				if( listMods.GetItemChecked( DisplayedMod.Key ) )
+				{
+					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
+
+					Debug.WriteLine( $"modder: {Modder.MemoryModder.Instance}" );
+					DisplayedMod.Value.WriteToMemory();
+				}
+			}
 		}
 	}
 
