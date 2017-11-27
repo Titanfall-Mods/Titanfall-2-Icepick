@@ -187,11 +187,17 @@ namespace Launcher
 				if( listMods.GetItemChecked( DisplayedMod.Key ) )
 				{
 					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
-
-					Debug.WriteLine( $"modder: {Modder.MemoryModder.Instance}" );
 					DisplayedMod.Value.WriteToMemory();
 				}
 			}
+
+			// 1E8C9D3F1C0
+			/*
+			long Address = Convert.ToInt64( "1E8C9D3F1C0", 16 );
+			byte[] Bytes = new byte[] { 0x00, 0x00 };
+			int bytesWritten = Modder.MemoryModder.Instance.WriteMemory( Address, Bytes );
+			Debug.WriteLine( $"Wrote bytes? {bytesWritten}" );
+			*/
 		}
 	}
 
