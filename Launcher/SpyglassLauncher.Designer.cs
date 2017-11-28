@@ -35,19 +35,26 @@
 			this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lookupGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabSettings = new System.Windows.Forms.TabPage();
 			this.tabMods = new System.Windows.Forms.TabPage();
-			this.btnWriteMods = new System.Windows.Forms.Button();
 			this.listMods = new System.Windows.Forms.CheckedListBox();
+			this.btnWriteMods = new System.Windows.Forms.Button();
+			this.tabConsole = new System.Windows.Forms.TabPage();
+			this.listConsoleTags = new System.Windows.Forms.ListBox();
+			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.lookupScannerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabSettings.SuspendLayout();
 			this.tabMods.SuspendLayout();
+			this.tabConsole.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -90,6 +97,7 @@
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.aboutToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -109,16 +117,32 @@
 			// debugToolStripMenuItem
 			// 
 			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
 			this.debugToolStripMenuItem.Text = "Debug";
 			this.debugToolStripMenuItem.Click += new System.EventHandler(this.optionMenuItem_Click);
 			// 
 			// quitToolStripMenuItem
 			// 
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
 			this.quitToolStripMenuItem.Text = "Quit";
 			this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
+			// 
+			// toolsToolStripMenuItem
+			// 
+			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lookupGeneratorToolStripMenuItem,
+            this.lookupScannerToolStripMenuItem});
+			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+			this.toolsToolStripMenuItem.Text = "Tools";
+			// 
+			// lookupGeneratorToolStripMenuItem
+			// 
+			this.lookupGeneratorToolStripMenuItem.Name = "lookupGeneratorToolStripMenuItem";
+			this.lookupGeneratorToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.lookupGeneratorToolStripMenuItem.Text = "Lookup Generator";
+			this.lookupGeneratorToolStripMenuItem.Click += new System.EventHandler(this.lookupGeneratorToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -153,6 +177,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControl1.Controls.Add(this.tabSettings);
 			this.tabControl1.Controls.Add(this.tabMods);
+			this.tabControl1.Controls.Add(this.tabConsole);
 			this.tabControl1.Location = new System.Drawing.Point(12, 27);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -183,6 +208,17 @@
 			this.tabMods.Text = "Mods";
 			this.tabMods.UseVisualStyleBackColor = true;
 			// 
+			// listMods
+			// 
+			this.listMods.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listMods.FormattingEnabled = true;
+			this.listMods.Location = new System.Drawing.Point(6, 6);
+			this.listMods.Name = "listMods";
+			this.listMods.Size = new System.Drawing.Size(563, 349);
+			this.listMods.TabIndex = 6;
+			// 
 			// btnWriteMods
 			// 
 			this.btnWriteMods.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -195,16 +231,49 @@
 			this.btnWriteMods.UseVisualStyleBackColor = true;
 			this.btnWriteMods.Click += new System.EventHandler(this.btnWriteMods_Click);
 			// 
-			// listMods
+			// tabConsole
 			// 
-			this.listMods.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.tabConsole.Controls.Add(this.listConsoleTags);
+			this.tabConsole.Controls.Add(this.richTextBox1);
+			this.tabConsole.Location = new System.Drawing.Point(4, 22);
+			this.tabConsole.Name = "tabConsole";
+			this.tabConsole.Size = new System.Drawing.Size(575, 422);
+			this.tabConsole.TabIndex = 2;
+			this.tabConsole.Text = "Console";
+			this.tabConsole.UseVisualStyleBackColor = true;
+			// 
+			// listConsoleTags
+			// 
+			this.listConsoleTags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.listConsoleTags.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.listConsoleTags.FormattingEnabled = true;
+			this.listConsoleTags.ItemHeight = 18;
+			this.listConsoleTags.Location = new System.Drawing.Point(3, 3);
+			this.listConsoleTags.Name = "listConsoleTags";
+			this.listConsoleTags.Size = new System.Drawing.Size(146, 418);
+			this.listConsoleTags.TabIndex = 1;
+			// 
+			// richTextBox1
+			// 
+			this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.listMods.FormattingEnabled = true;
-			this.listMods.Location = new System.Drawing.Point(6, 6);
-			this.listMods.Name = "listMods";
-			this.listMods.Size = new System.Drawing.Size(563, 349);
-			this.listMods.TabIndex = 6;
+			this.richTextBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.richTextBox1.Location = new System.Drawing.Point(155, 3);
+			this.richTextBox1.Name = "richTextBox1";
+			this.richTextBox1.ReadOnly = true;
+			this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+			this.richTextBox1.Size = new System.Drawing.Size(417, 416);
+			this.richTextBox1.TabIndex = 0;
+			this.richTextBox1.Text = "Console Text";
+			// 
+			// lookupScannerToolStripMenuItem
+			// 
+			this.lookupScannerToolStripMenuItem.Name = "lookupScannerToolStripMenuItem";
+			this.lookupScannerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.lookupScannerToolStripMenuItem.Text = "Lookup Scanner";
+			this.lookupScannerToolStripMenuItem.Click += new System.EventHandler(this.lookupScannerToolStripMenuItem_Click);
 			// 
 			// SpyglassLauncher
 			// 
@@ -224,6 +293,7 @@
 			this.tabControl1.ResumeLayout(false);
 			this.tabSettings.ResumeLayout(false);
 			this.tabMods.ResumeLayout(false);
+			this.tabConsole.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -246,6 +316,12 @@
 		private System.Windows.Forms.TabPage tabMods;
 		private System.Windows.Forms.Button btnWriteMods;
 		private System.Windows.Forms.CheckedListBox listMods;
+		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+		private System.Windows.Forms.TabPage tabConsole;
+		private System.Windows.Forms.ListBox listConsoleTags;
+		private System.Windows.Forms.RichTextBox richTextBox1;
+		private System.Windows.Forms.ToolStripMenuItem lookupGeneratorToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lookupScannerToolStripMenuItem;
 	}
 }
 

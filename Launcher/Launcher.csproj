@@ -72,6 +72,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
+    <Compile Include="Forms\LookupGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LookupGenerator.Designer.cs">
+      <DependentUpon>LookupGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LookupScanner.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LookupScanner.Designer.cs">
+      <DependentUpon>LookupScanner.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModDocuments\ModBase.cs" />
     <Compile Include="ModDocuments\ModJson.cs" />
     <Compile Include="ModDocuments\ModXml.cs" />
@@ -92,6 +104,12 @@
     <Compile Include="Syringe\Win32\Enums.cs" />
     <Compile Include="Syringe\Win32\Imports.cs" />
     <Compile Include="Syringe\Win32\Structs.cs" />
+    <EmbeddedResource Include="Forms\LookupGenerator.resx">
+      <DependentUpon>LookupGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LookupScanner.resx">
+      <DependentUpon>LookupScanner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SpyglassLauncher.resx">
       <DependentUpon>SpyglassLauncher.cs</DependentUpon>
     </EmbeddedResource>

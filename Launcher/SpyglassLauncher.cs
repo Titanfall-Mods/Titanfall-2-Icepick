@@ -199,6 +199,18 @@ namespace Launcher
 			Debug.WriteLine( $"Wrote bytes? {bytesWritten}" );
 			*/
 		}
+
+		private void lookupGeneratorToolStripMenuItem_Click( object sender, EventArgs e )
+		{
+			Forms.LookupGenerator LookupGenerator = new Forms.LookupGenerator();
+			LookupGenerator.Show();
+		}
+
+		private void lookupScannerToolStripMenuItem_Click( object sender, EventArgs e )
+		{
+			Forms.LookupScanner LookupScanner = new Forms.LookupScanner();
+			LookupScanner.Show();
+		}
 	}
 
 }
