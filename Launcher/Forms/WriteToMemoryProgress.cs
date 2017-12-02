@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Launcher.Controls;
@@ -71,10 +72,20 @@ namespace Launcher.Forms
 				}
 				else
 				{
-					ProgressDisplay.InfoText = ProgressDisplay.File.State.ToString();
+					ProgressDisplay.InfoText = MakeNiceString( ProgressDisplay.File.State.ToString() );
 				}
 
 			}
 		}
+
+		protected string MakeNiceString(string Input)
+		{
+			var r = new Regex( @"
+                (?<=[A-Z])(?=[A-Z][a-z]) |
+                 (?<=[^A-Z])(?=[A-Z]) |
+                 (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace );
+			return r.Replace( Input, " " );
+		}
+
 	}
 }
