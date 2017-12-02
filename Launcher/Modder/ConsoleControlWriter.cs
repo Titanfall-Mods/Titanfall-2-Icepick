@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace Launcher.Modder
 {
@@ -46,11 +48,28 @@ namespace Launcher.Modder
 			m_TextBox = Control;
 		}
 
-		protected void WriteOnThread(string Text)
+		protected void WriteOnThread( string Text )
 		{
+			System.Drawing.Color Color = System.Drawing.Color.Gray;
+
+			var r = new Regex( @"\[([A-Z][a-z]+)\]", RegexOptions.IgnorePatternWhitespace );
+			Match M = r.Match( Text );
+			if ( M.Success )
+			{
+				string ColorName = M.Captures[0].Value;
+				ColorName = ColorName.Replace( "[", "" );
+				ColorName = ColorName.Replace( "]", "" );
+				PropertyInfo ColorProp = typeof( System.Drawing.Color ).GetProperty( ColorName, BindingFlags.Public | BindingFlags.Static );
+				if( ColorProp != null )
+				{
+					Color = (System.Drawing.Color) ColorProp.GetValue( null );
+					Text = Text.Replace( M.Captures[ 0 ].Value, "" );
+				}
+			}
+
 			m_TextBox.SelectionStart = m_TextBox.TextLength;
 			m_TextBox.SelectionLength = 0;
-			m_TextBox.SelectionColor = System.Drawing.Color.Gray;
+			m_TextBox.SelectionColor = Color;
 			m_TextBox.AppendText( $"{DateTime.Now.ToString( "HH:mm:ss" )} | {Text}" );
 		}
 
