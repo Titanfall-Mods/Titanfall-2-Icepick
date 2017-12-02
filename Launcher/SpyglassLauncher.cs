@@ -43,6 +43,11 @@ namespace Launcher
 		{
 			InitializeComponent();
 
+			// Redirect outputs to the in-app console
+			Console.SetOut( new Modder.MultiConsoleWriter( new Modder.ConsoleControlWriter( richTextBoxConsole ), Console.Out ) );
+			var ConsoleDebugListener = new Modder.ConsoleControlTraceListener( richTextBoxConsole );
+			Debug.Listeners.Add( ConsoleDebugListener );
+
 			txtGamePath.Text = DEFAULT_GAME_PATH;
 
 			foreach ( var ModPath in Directory.GetDirectories( "Mods" ) )
@@ -222,6 +227,14 @@ namespace Launcher
 		{
 			Forms.LookupScanner LookupScanner = new Forms.LookupScanner();
 			LookupScanner.Show();
+		}
+
+		private void SpyglassLauncher_Load( object sender, EventArgs e )
+		{
+			foreach ( TabPage Page in tabControl.TabPages )
+			{
+				Page.Show();
+			}
 		}
 	}
 

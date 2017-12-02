@@ -105,6 +105,8 @@
     <Compile Include="Forms\WriteToMemoryProgress.Designer.cs">
       <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modder\ConsoleControlWriter.cs" />
+    <Compile Include="Modder\MultiConsoleWriter.cs" />
     <Compile Include="ModDocuments\ModBase.cs" />
     <Compile Include="ModDocuments\ModJson.cs" />
     <Compile Include="ModDocuments\ModXml.cs" />

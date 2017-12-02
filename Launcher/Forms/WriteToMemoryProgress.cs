@@ -81,9 +81,9 @@ namespace Launcher.Forms
 		protected string MakeNiceString(string Input)
 		{
 			var r = new Regex( @"
-                (?<=[A-Z])(?=[A-Z][a-z]) |
-                 (?<=[^A-Z])(?=[A-Z]) |
-                 (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace );
+				(?<=[A-Z])(?=[A-Z][a-z]) |
+				(?<=[^A-Z])(?=[A-Z]) |
+				(?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace );
 			return r.Replace( Input, " " );
 		}
 

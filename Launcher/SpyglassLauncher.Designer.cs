@@ -41,17 +41,17 @@
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabSettings = new System.Windows.Forms.TabPage();
 			this.tabMods = new System.Windows.Forms.TabPage();
 			this.listMods = new System.Windows.Forms.CheckedListBox();
 			this.btnWriteMods = new System.Windows.Forms.Button();
 			this.tabConsole = new System.Windows.Forms.TabPage();
 			this.listConsoleTags = new System.Windows.Forms.ListBox();
-			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.richTextBoxConsole = new System.Windows.Forms.RichTextBox();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
-			this.tabControl1.SuspendLayout();
+			this.tabControl.SuspendLayout();
 			this.tabSettings.SuspendLayout();
 			this.tabMods.SuspendLayout();
 			this.tabConsole.SuspendLayout();
@@ -177,19 +177,19 @@
 			this.btnLaunchGame.UseVisualStyleBackColor = true;
 			this.btnLaunchGame.Click += new System.EventHandler(this.btnLaunchGame_Click);
 			// 
-			// tabControl1
+			// tabControl
 			// 
-			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tabControl1.Controls.Add(this.tabSettings);
-			this.tabControl1.Controls.Add(this.tabMods);
-			this.tabControl1.Controls.Add(this.tabConsole);
-			this.tabControl1.Location = new System.Drawing.Point(12, 27);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(583, 448);
-			this.tabControl1.TabIndex = 2;
+			this.tabControl.Controls.Add(this.tabSettings);
+			this.tabControl.Controls.Add(this.tabMods);
+			this.tabControl.Controls.Add(this.tabConsole);
+			this.tabControl.Location = new System.Drawing.Point(12, 27);
+			this.tabControl.Name = "tabControl";
+			this.tabControl.SelectedIndex = 0;
+			this.tabControl.Size = new System.Drawing.Size(583, 448);
+			this.tabControl.TabIndex = 2;
 			// 
 			// tabSettings
 			// 
@@ -241,7 +241,7 @@
 			// tabConsole
 			// 
 			this.tabConsole.Controls.Add(this.listConsoleTags);
-			this.tabConsole.Controls.Add(this.richTextBox1);
+			this.tabConsole.Controls.Add(this.richTextBoxConsole);
 			this.tabConsole.Location = new System.Drawing.Point(4, 22);
 			this.tabConsole.Name = "tabConsole";
 			this.tabConsole.Size = new System.Drawing.Size(575, 422);
@@ -261,36 +261,38 @@
 			this.listConsoleTags.Size = new System.Drawing.Size(146, 418);
 			this.listConsoleTags.TabIndex = 1;
 			// 
-			// richTextBox1
+			// richTextBoxConsole
 			// 
-			this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.richTextBoxConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.richTextBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.richTextBox1.Location = new System.Drawing.Point(155, 3);
-			this.richTextBox1.Name = "richTextBox1";
-			this.richTextBox1.ReadOnly = true;
-			this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-			this.richTextBox1.Size = new System.Drawing.Size(417, 416);
-			this.richTextBox1.TabIndex = 0;
-			this.richTextBox1.Text = "Console Text";
+			this.richTextBoxConsole.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.richTextBoxConsole.HideSelection = false;
+			this.richTextBoxConsole.Location = new System.Drawing.Point(155, 3);
+			this.richTextBoxConsole.Name = "richTextBoxConsole";
+			this.richTextBoxConsole.ReadOnly = true;
+			this.richTextBoxConsole.Size = new System.Drawing.Size(417, 416);
+			this.richTextBoxConsole.TabIndex = 0;
+			this.richTextBoxConsole.Text = "";
+			this.richTextBoxConsole.WordWrap = false;
 			// 
 			// SpyglassLauncher
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(607, 500);
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.tabControl);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "SpyglassLauncher";
 			this.Text = "Icepick Launcher";
+			this.Load += new System.EventHandler(this.SpyglassLauncher_Load);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
-			this.tabControl1.ResumeLayout(false);
+			this.tabControl.ResumeLayout(false);
 			this.tabSettings.ResumeLayout(false);
 			this.tabMods.ResumeLayout(false);
 			this.tabConsole.ResumeLayout(false);
@@ -311,7 +313,7 @@
 		private System.Windows.Forms.Button btnBrowseGamePath;
 		private System.Windows.Forms.TextBox txtGamePath;
 		private System.Windows.Forms.Button btnLaunchGame;
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl tabControl;
 		private System.Windows.Forms.TabPage tabSettings;
 		private System.Windows.Forms.TabPage tabMods;
 		private System.Windows.Forms.Button btnWriteMods;
@@ -319,7 +321,7 @@
 		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.TabPage tabConsole;
 		private System.Windows.Forms.ListBox listConsoleTags;
-		private System.Windows.Forms.RichTextBox richTextBox1;
+		private System.Windows.Forms.RichTextBox richTextBoxConsole;
 		private System.Windows.Forms.ToolStripMenuItem lookupGeneratorToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lookupScannerToolStripMenuItem;
 	}
