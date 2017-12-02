@@ -106,6 +106,7 @@
       <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="Modder\ConsoleControlWriter.cs" />
+    <Compile Include="Modder\ConsoleFileWatcher.cs" />
     <Compile Include="Modder\MultiConsoleWriter.cs" />
     <Compile Include="ModDocuments\ModBase.cs" />
     <Compile Include="ModDocuments\ModJson.cs" />

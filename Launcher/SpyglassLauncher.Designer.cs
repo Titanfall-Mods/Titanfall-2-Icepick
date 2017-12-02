@@ -92,6 +92,7 @@
 			this.txtGamePath.Size = new System.Drawing.Size(464, 20);
 			this.txtGamePath.TabIndex = 0;
 			this.txtGamePath.Text = "C:\\Program Files (x86)\\Origin Games\\Titanfall2\\Titanfall2.exe";
+			this.txtGamePath.TextChanged += new System.EventHandler(this.txtGamePath_TextChanged);
 			// 
 			// menuStrip1
 			// 

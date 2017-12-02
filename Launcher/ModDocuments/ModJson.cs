@@ -24,12 +24,19 @@ namespace Launcher
 			{ "Files", WriteToFieldFilesList }
 		};
 
+		public new static bool ShouldLoad( string ModPath )
+		{
+			return System.IO.File.Exists( $"{ModPath}{System.IO.Path.DirectorySeparatorChar}{MOD_DOCUMENT_NAME}");
+		}
+
 		public override void Load( string ModPath )
 		{
 			base.Load( ModPath );
 
 			StreamReader FileReader = new StreamReader( $"{Path}{System.IO.Path.DirectorySeparatorChar}{MOD_DOCUMENT_NAME}" );
 			string ModDocumentContents = FileReader.ReadToEnd();
+			FileReader.Close();
+
 			JsonReader Reader = new JsonReader();
 			var JsonData = Reader.Read<Dictionary<string, object>>( ModDocumentContents );
 			foreach ( var Pair in JsonData )

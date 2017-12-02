@@ -38,6 +38,7 @@ namespace Launcher
 		private const string DLL_FUNC_INIT = "InitializeSDK";
 
 		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
+		private Modder.ConsoleFileWatcher ConsoleWatcher;
 
 		public SpyglassLauncher()
 		{
@@ -52,13 +53,19 @@ namespace Launcher
 
 			foreach ( var ModPath in Directory.GetDirectories( "Mods" ) )
 			{
-				int Index = listMods.Items.Add( ModPath );
-				ModJson NewMod = new ModJson();
-				NewMod.Load( ModPath );
-				DisplayedMods.Add( Index, NewMod );
+				if ( ModJson.ShouldLoad( ModPath ) )
+				{
+					int Index = listMods.Items.Add( ModPath );
+					ModJson NewMod = new ModJson();
+					NewMod.Load( ModPath );
+					DisplayedMods.Add( Index, NewMod );
+				}
 			}
+
+			// Watch the log file path so that we can update them in the console
+			ConsoleWatcher = new Modder.ConsoleFileWatcher( txtGamePath.Text );
 		}
-		
+
 		// Injection
 		private void CreateInjectionThread()
 		{
@@ -235,6 +242,11 @@ namespace Launcher
 			{
 				Page.Show();
 			}
+		}
+
+		private void txtGamePath_TextChanged( object sender, EventArgs e )
+		{
+			ConsoleWatcher?.UpdateWatchPath( txtGamePath.Text );
 		}
 	}
 

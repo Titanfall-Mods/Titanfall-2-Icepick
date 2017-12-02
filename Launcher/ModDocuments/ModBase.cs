@@ -177,6 +177,11 @@ namespace Launcher.ModDocuments
 		{
 		}
 
+		public static bool ShouldLoad( string ModPath )
+		{
+			return true;
+		}
+
 		public virtual void Load( string ModPath )
 		{
 			Path = ModPath;
