@@ -175,9 +175,21 @@ namespace Launcher
 			}));
 		}
 
-		private void btnWriteMods_Click( object sender, EventArgs e )
+		private async void btnWriteMods_Click( object sender, EventArgs e )
 		{
-			InjectMods();
+			Forms.WriteToMemoryProgress WriteToMemory = new Forms.WriteToMemoryProgress();
+			WriteToMemory.Show();
+
+			foreach ( var DisplayedMod in DisplayedMods )
+			{
+				if ( listMods.GetItemChecked( DisplayedMod.Key ) )
+				{
+					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
+					WriteToMemory.AddModProgress( DisplayedMod.Value );
+					await Task.Factory.StartNew( () => DisplayedMod.Value.WriteToMemory() );
+				}
+			}
+
 		}
 
 		private async void InjectMods()
@@ -187,7 +199,7 @@ namespace Launcher
 				if( listMods.GetItemChecked( DisplayedMod.Key ) )
 				{
 					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
-					DisplayedMod.Value.WriteToMemory();
+					await Task.Factory.StartNew( () => DisplayedMod.Value.WriteToMemory() );
 				}
 			}
 

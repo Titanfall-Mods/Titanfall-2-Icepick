@@ -37,6 +37,7 @@
 			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lookupGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lookupScannerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
@@ -48,7 +49,6 @@
 			this.tabConsole = new System.Windows.Forms.TabPage();
 			this.listConsoleTags = new System.Windows.Forms.ListBox();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-			this.lookupScannerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -143,6 +143,13 @@
 			this.lookupGeneratorToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
 			this.lookupGeneratorToolStripMenuItem.Text = "Lookup Generator";
 			this.lookupGeneratorToolStripMenuItem.Click += new System.EventHandler(this.lookupGeneratorToolStripMenuItem_Click);
+			// 
+			// lookupScannerToolStripMenuItem
+			// 
+			this.lookupScannerToolStripMenuItem.Name = "lookupScannerToolStripMenuItem";
+			this.lookupScannerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.lookupScannerToolStripMenuItem.Text = "Lookup Scanner";
+			this.lookupScannerToolStripMenuItem.Click += new System.EventHandler(this.lookupScannerToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -268,13 +275,6 @@
 			this.richTextBox1.TabIndex = 0;
 			this.richTextBox1.Text = "Console Text";
 			// 
-			// lookupScannerToolStripMenuItem
-			// 
-			this.lookupScannerToolStripMenuItem.Name = "lookupScannerToolStripMenuItem";
-			this.lookupScannerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-			this.lookupScannerToolStripMenuItem.Text = "Lookup Scanner";
-			this.lookupScannerToolStripMenuItem.Click += new System.EventHandler(this.lookupScannerToolStripMenuItem_Click);
-			// 
 			// SpyglassLauncher
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,7 +285,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "SpyglassLauncher";
-			this.Text = "Spyglass Launcher";
+			this.Text = "Icepick Launcher";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);

@@ -39,10 +39,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -71,6 +71,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\InfoProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ModWriteToMemoryHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ModWriteToMemoryHeader.Designer.cs">
+      <DependentUpon>ModWriteToMemoryHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="Forms\LookupGenerator.cs">
       <SubType>Form</SubType>
@@ -83,6 +92,18 @@
     </Compile>
     <Compile Include="Forms\LookupScanner.Designer.cs">
       <DependentUpon>LookupScanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FileWriteToMemoryProgress.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FileWriteToMemoryProgress.Designer.cs">
+      <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WriteToMemoryProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WriteToMemoryProgress.Designer.cs">
+      <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="ModDocuments\ModBase.cs" />
     <Compile Include="ModDocuments\ModJson.cs" />
@@ -104,11 +125,20 @@
     <Compile Include="Syringe\Win32\Enums.cs" />
     <Compile Include="Syringe\Win32\Imports.cs" />
     <Compile Include="Syringe\Win32\Structs.cs" />
+    <EmbeddedResource Include="Controls\ModWriteToMemoryHeader.resx">
+      <DependentUpon>ModWriteToMemoryHeader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LookupGenerator.resx">
       <DependentUpon>LookupGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LookupScanner.resx">
       <DependentUpon>LookupScanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FileWriteToMemoryProgress.resx">
+      <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WriteToMemoryProgress.resx">
+      <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpyglassLauncher.resx">
       <DependentUpon>SpyglassLauncher.cs</DependentUpon>

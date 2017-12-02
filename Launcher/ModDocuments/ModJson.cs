@@ -47,13 +47,13 @@ namespace Launcher
 
 		public static void WriteAsFieldString( ModJson TargetMod, KeyValuePair<string, object> DataPair )
 		{
-			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic );
+			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
 			Field.SetValue( TargetMod, (string) DataPair.Value );
 		}
 
 		public static void WriteToFieldStringList( ModJson TargetMod, KeyValuePair<string, object> DataPair )
 		{
-			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic );
+			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
 			List<string> TargetField = Field.GetValue( TargetMod ) as List<string>;
 			var DataList = DataPair.Value as string[];
 			foreach ( var Value in DataList )
@@ -64,7 +64,7 @@ namespace Launcher
 
 		public static void WriteToFieldFilesList( ModJson TargetMod, KeyValuePair<string, object> DataPair )
 		{
-			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic );
+			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
 			List<File> TargetField = Field.GetValue( TargetMod ) as List<File>;
 
 			foreach ( dynamic Data in ( DataPair.Value as System.Dynamic.ExpandoObject[] ) )
