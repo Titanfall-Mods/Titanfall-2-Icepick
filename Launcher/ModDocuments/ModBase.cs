@@ -22,6 +22,7 @@ namespace Launcher.ModDocuments
 				Finished
 			}
 
+			public string id;
 			public string ComparisonString;
 			public string ReplacedCodeFile;
 			public long AddressOffset;
@@ -88,6 +89,19 @@ namespace Launcher.ModDocuments
 					// Get the bytes we wish to write
 					string ReplacementPath = $"{ParentMod.Path}{System.IO.Path.DirectorySeparatorChar}{ReplacedCodeFile}";
 					byte[] FileBytes = System.IO.File.ReadAllBytes( ReplacementPath );
+
+					// Append
+					foreach(AppendedFile AppendFile in ParentMod.AppendedFiles)
+					{
+						if( AppendFile.AppendTo == this.id )
+						{
+							byte[] AppendBytes = System.IO.File.ReadAllBytes( $"{ParentMod.Path}{System.IO.Path.DirectorySeparatorChar}{AppendFile.ScriptPath}" );
+							FileBytes = FileBytes.ToList().Concat( AppendBytes ).ToArray();
+						}
+					}
+
+					// Write
+					System.IO.File.WriteAllText( $"{ParentMod.Path}{System.IO.Path.DirectorySeparatorChar}processed{System.IO.Path.DirectorySeparatorChar}{ReplacedCodeFile}", Encoding.ASCII.GetString( FileBytes ) );
 
 					// Get the new memory address to write to
 					UpdateStatus( WriteState.FindingNewMemory );
@@ -165,6 +179,12 @@ namespace Launcher.ModDocuments
 			}
 		}
 
+		public class AppendedFile
+		{
+			public string AppendTo;
+			public string ScriptPath;
+		}
+
 		public string Path;
 		protected string Name;
 		protected string Description;
@@ -172,6 +192,7 @@ namespace Launcher.ModDocuments
 		protected List<string> Authors = new List<string>();
 		protected List<string> Contacts = new List<string>();
 		public List<File> Files = new List<File>();
+		public List<AppendedFile> AppendedFiles = new List<AppendedFile>();
 
 		public ModBase()
 		{
