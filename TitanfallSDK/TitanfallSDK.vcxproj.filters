@@ -16,8 +16,11 @@
     <Filter Include="Source Files\Console">
       <UniqueIdentifier>{505852db-9193-498c-a0aa-bd88d579d87c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Signatures">
+      <UniqueIdentifier>{a0653cd7-95f1-4349-9328-a6527c5693d7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Utils">
-      <UniqueIdentifier>{0d4a5cf6-55fd-4296-94ac-73fa40d129cc}</UniqueIdentifier>
+      <UniqueIdentifier>{86208c33-8751-4c6d-b508-6ea73bbe3b92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +30,9 @@
     <ClCompile Include="console\Console.cpp">
       <Filter>Source Files\Console</Filter>
     </ClCompile>
+    <ClCompile Include="Signatures\SigScan.cpp">
+      <Filter>Source Files\Signatures</Filter>
+    </ClCompile>
     <ClCompile Include="Utils\Util.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -35,8 +41,14 @@
     <ClInclude Include="console\Console.h">
       <Filter>Source Files\Console</Filter>
     </ClInclude>
+    <ClInclude Include="Signatures\SigScan.h">
+      <Filter>Source Files\Signatures</Filter>
+    </ClInclude>
     <ClInclude Include="Utils\Util.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

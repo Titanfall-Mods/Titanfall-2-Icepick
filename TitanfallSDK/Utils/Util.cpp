@@ -1,36 +1,40 @@
 
-#include "util.h"
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
 
-namespace pd2hook
+#include "Util.h"
+
+namespace Util
 {
-	namespace Util
+	template<typename Out>
+	void SplitString( const std::string &s, char delim, Out result )
 	{
-		Exception::Exception(const char *file, int line) :
-			mFile(file), mLine(line)
-		{}
-
-		Exception::Exception(std::string msg, const char *file, int line) :
-			mFile(file), mLine(line), mMsg(std::move(msg))
-		{}
-
-		const char *Exception::what() const
+		std::stringstream ss( s );
+		std::string item;
+		while ( std::getline( ss, item, delim ) )
 		{
-			if (!mMsg.empty())
-			{
-				return mMsg.c_str();
-			}
-
-			return std::exception::what();
+			*(result++) = item;
 		}
+	}
 
-		const char *Exception::exceptionName() const
+	std::vector<std::string> SplitString( const std::string &s, char delim )
+	{
+		std::vector<std::string> elems;
+		SplitString( s, delim, std::back_inserter( elems ) );
+		return elems;
+	}
+
+	std::vector<std::wstring> SplitString( const std::wstring &str, wchar_t delim )
+	{
+		std::wstring temp;
+		std::vector<std::wstring> parts;
+		std::wstringstream wss( str );
+		while ( std::getline( wss, temp, delim ) )
 		{
-			return "An exception";
+			parts.push_back( temp );
 		}
-
-		void Exception::writeToStream(std::ostream& os) const
-		{
-			os << exceptionName() << " occurred @ (" << mFile << ':' << mLine << "). " << what();
-		}
+		return parts;
 	}
 }

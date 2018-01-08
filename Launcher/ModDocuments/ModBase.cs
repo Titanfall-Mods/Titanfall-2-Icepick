@@ -62,7 +62,7 @@ namespace Launcher.ModDocuments
 					// Find the address of the existing memory
 					UpdateStatus( WriteState.FindingExistingScript );
 					long ExistingAddress = Modder.MemoryModder.Instance.FindAddress( Encoding.ASCII.GetBytes( ComparisonString ) );
-					Debug.WriteLine( $"ExistingAddress: {ExistingAddress.ToString( "X" )}" );
+					Debug.WriteLine( $"{this} ExistingAddress: {ExistingAddress.ToString( "X" )}" );
 					if( ExistingAddress <= 0 )
 					{
 						throw new Exception( "Could not find address of existing script." );
@@ -80,7 +80,7 @@ namespace Launcher.ModDocuments
 					// Search for the address of the pointer to the existing memory
 					UpdateStatus( WriteState.FindingPointerToScript );
 					long PointerAddress = Modder.MemoryModder.Instance.FindAddress( HexBytes );
-					Debug.WriteLine( $"PointerAddress: {PointerAddress.ToString( "X" )}" );
+					Debug.WriteLine( $"{this} PointerAddress: {PointerAddress.ToString( "X" )}" );
 					if( PointerAddress <= 0 )
 					{
 						throw new Exception( "Could not find pointer to existing script." );

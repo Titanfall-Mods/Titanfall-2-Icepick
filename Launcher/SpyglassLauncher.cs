@@ -40,6 +40,9 @@ namespace Launcher
 		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
 		private Modder.ConsoleFileWatcher ConsoleWatcher;
 
+		Injector SyringeInstance;
+		Process TTF2Process;
+
 		public SpyglassLauncher()
 		{
 			InitializeComponent();
@@ -148,6 +151,9 @@ namespace Launcher
 			syringe.InjectLibrary(DLL_NAME);
 			syringe.CallExport(DLL_NAME, DLL_FUNC_CONSOLE);
 			syringe.CallExport(DLL_NAME, DLL_FUNC_INIT);
+
+			TTF2Process = targetProcess;
+			SyringeInstance = syringe;
 		}
 
 		// Actions
@@ -247,6 +253,40 @@ namespace Launcher
 		private void txtGamePath_TextChanged( object sender, EventArgs e )
 		{
 			ConsoleWatcher?.UpdateWatchPath( txtGamePath.Text );
+		}
+
+		// @todo: actually code this
+		private void spawnListGeneratorToolStripMenuItem_Click( object sender, EventArgs e )
+		{
+			List<string> ModelsList = new List<string>();
+			AddFilesInDirectory( ModelsList, @"F:\Projects\Titanfall_vpk_replacement\englishclient_sp_timeshift_spoke\models" );
+
+			StreamWriter Writer = File.CreateText( "NewSpawnList.txt" );
+			for (int i = 0; i < ModelsList.Count; ++i )
+			{
+				ModelsList[ i ] = ModelsList[ i ].Replace( @"F:\Projects\Titanfall_vpk_replacement\englishclient_sp_timeshift_spoke\", "" );
+				ModelsList[ i ] = ModelsList[ i ].Replace( @"\", @"/" );
+				Writer.WriteLine( ModelsList[ i ] );
+			}
+			Writer.Close();
+		}
+
+		private void AddFilesInDirectory( List<string> ModelsList, string Path )
+		{
+			foreach( var SubDir in Directory.GetDirectories( Path ) )
+			{
+				AddFilesInDirectory( ModelsList, SubDir );
+			}
+			foreach(var File in Directory.GetFiles( Path ))
+			{
+				ModelsList.Add( File );
+			}
+		}
+
+		// @todo: remove this
+		private void sigScanTestToolStripMenuItem_Click( object sender, EventArgs e )
+		{
+			SyringeInstance.CallExport( DLL_NAME, "TestSigscan" );
 		}
 	}
 
