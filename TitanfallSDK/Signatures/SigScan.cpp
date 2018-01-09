@@ -19,7 +19,7 @@ using namespace Util;
 // Squirrel 2.2.3 stable
 typedef __int64 SQInteger;
 typedef SQInteger SQRESULT;
-typedef wchar_t SQChar;
+typedef char SQChar;
 typedef struct SQVM* HSQUIRRELVM;
 
 typedef int (WINAPI *MESSAGEBOXW)(HWND, LPCWSTR, LPCWSTR, UINT);
@@ -211,7 +211,7 @@ void SignatureSearch::DebugInfo()
 
 SQRESULT hk_sq_throwerror( HSQUIRRELVM v, const SQChar *err )
 {
-	printf( "[ERROR] %s \n", *err );
+	std::cout << "[ERROR] " << err << std::endl;
 	return fpSqThrowError( v, err );
 }
 
