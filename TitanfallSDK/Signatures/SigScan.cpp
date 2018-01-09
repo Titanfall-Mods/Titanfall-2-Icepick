@@ -150,7 +150,7 @@ HMODULE SignatureSearch::GetProcessModule( HANDLE hProcess, TCHAR* targetModuleN
 				const wchar_t * moduleName = modNameParts[modNameParts.size() - 1].c_str();
 				int cmpName = _tcscmp( moduleName, targetModuleName );
 
-				_tprintf( TEXT( "\t%s (0x%8X) [%s == %i]\n" ), szModName, hMods[i], moduleName, cmpName );
+				_tprintf( TEXT( "\t%s (0x%p) [%s == %i]\n" ), szModName, hMods[i], moduleName, cmpName );
 				if ( cmpName == 0 )
 				{
 					return hMods[i];
@@ -167,11 +167,11 @@ void SignatureSearch::DebugInfo()
 {
 	if ( allSignatures )
 	{
-		printf( "Requested signatures: %u \n", allSignatures->size() );
+		printf( "Requested signatures: %I64u \n", allSignatures->size() );
 		std::vector<SignatureF>::iterator it;
 		for ( it = allSignatures->begin(); it < allSignatures->end(); it++ )
 		{
-			printf( "%s address: %08X \n", it->funcname, it->address );
+			printf( "%s address: %p \n", it->funcname, it->address );
 		}
 	}
 	else
@@ -199,7 +199,7 @@ void SignatureSearch::DebugInfo()
 			TCHAR szModName[MAX_PATH];
 			if ( GetModuleFileNameEx( hProcess, hMods[i], szModName, sizeof( szModName ) / sizeof( TCHAR ) ) )
 			{
-				_tprintf( TEXT( "\t%s (0x%8X)\n" ), szModName, hMods[i] );
+				_tprintf( TEXT( "\t%s (0x%p)\n" ), szModName, hMods[i] );
 			}
 		}
 	}
@@ -237,9 +237,9 @@ void SignatureSearch::TestScan()
 	MODULEINFO hClientInfo = { 0 };
 	GetModuleInformation( GetCurrentProcess(), hClient, &hClientInfo, sizeof( MODULEINFO ) );
 	printf( "Client module info: \n" );
-	printf( "\t EntryPoint: 0x%8X", hClientInfo.EntryPoint );
-	printf( "\t lpBaseOfDll: 0x%8X", hClientInfo.lpBaseOfDll );
-	printf( "\t SizeOfImage: 0x%8X", hClientInfo.SizeOfImage );
+	printf( "\t EntryPoint: 0x%p", hClientInfo.EntryPoint );
+	printf( "\t lpBaseOfDll: 0x%p", hClientInfo.lpBaseOfDll );
+	printf( "\t SizeOfImage: 0x%08X", hClientInfo.SizeOfImage );
 	printf( "\n" );
 
 	printf( "Attempt sigscan... \n" );
@@ -254,7 +254,7 @@ void SignatureSearch::TestScan()
 	char* sMask = "xxxxxxxxxxxxxxxxxxx";
 
 	uintptr_t patternPointer = FindPatternEx( hProcess, hClientInfo, sPattern, sMask );
-	printf( "\t Found patternPointer?: 0x%8X \n", patternPointer );
+	printf( "\t Found patternPointer?: 0x%llx \n", (unsigned long long) patternPointer );
 
 	MH_STATUS stInit = MH_Initialize();
 	if ( stInit == MH_OK )
