@@ -99,6 +99,12 @@
     <Compile Include="Controls\FileWriteToMemoryProgress.Designer.cs">
       <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SpawnlistGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SpawnlistGenerator.Designer.cs">
+      <DependentUpon>SpawnlistGenerator.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WriteToMemoryProgress.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\FileWriteToMemoryProgress.resx">
       <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SpawnlistGenerator.resx">
+      <DependentUpon>SpawnlistGenerator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WriteToMemoryProgress.resx">
       <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
