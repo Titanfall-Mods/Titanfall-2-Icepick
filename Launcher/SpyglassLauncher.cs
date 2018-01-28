@@ -13,35 +13,26 @@ using System.Threading;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-
-// #define SQUIRREL_TESTING
+using Launcher.Utils;
 
 namespace Launcher
 {
 
 	public partial class SpyglassLauncher : Form
 	{
-
-		private Thread injectionThread;
-		private string gamePath;
-
 		private const float PROCESS_TIMEOUT = 30;
-#if SQUIRREL_TESTING
-		private const string DEFAULT_GAME_PATH = "F:/Projects/Git Repos/SquirrelTest/x64/Debug/SquirrelTest.exe"; // "C:/Program Files (x86)/Origin Games/Titanfall2/Titanfall2.exe";
-		private const string ORIGIN_LAUNCH_TTF_COMMAND = @"F:\Projects\Git Repos\SquirrelTest\x64\Debug\SquirrelTest.exe"; //"origin://LaunchGame/Origin.OFR.50.0001464";
-#else
 		private const string DEFAULT_GAME_PATH = "C:/Program Files (x86)/Origin Games/Titanfall2/Titanfall2.exe";
-		private const string ORIGIN_LAUNCH_TTF_COMMAND = "origin://LaunchGame/Origin.OFR.50.0001464";
-#endif
+		private const string ORIGIN_PROCESS_NAME = "Origin";
 		private const string DLL_NAME = "TitanfallSDK.dll";
 		private const string DLL_FUNC_CONSOLE = "InitializeSDKConsole";
 		private const string DLL_FUNC_INIT = "InitializeSDK";
 
 		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
 		private Modder.ConsoleFileWatcher ConsoleWatcher;
-
-		Injector SyringeInstance;
-		Process TTF2Process;
+		private Thread InjectionThread;
+		private string CurrentGamePath;
+		private Injector SyringeInstance;
+		private Process TTF2Process;
 
 		public SpyglassLauncher()
 		{
@@ -72,8 +63,8 @@ namespace Launcher
 		// Injection
 		private void CreateInjectionThread()
 		{
- 			injectionThread = new Thread(new ThreadStart(LaunchAndInject));
-			injectionThread.IsBackground = true;
+ 			InjectionThread = new Thread(new ThreadStart(LaunchAndInject));
+			InjectionThread.IsBackground = true;
 		}
 
 		private void LaunchAndInject()
@@ -83,7 +74,7 @@ namespace Launcher
 
 		private void PerformLaunch(bool performInjection = true)
 		{
- 			Process.Start(new ProcessStartInfo(ORIGIN_LAUNCH_TTF_COMMAND));
+ 			Process.Start(new ProcessStartInfo( txtGamePath.Text ) );
 			if (performInjection)
 			{
 				btnLaunchGame.Enabled = false;
@@ -95,14 +86,14 @@ namespace Launcher
 		private void PerformInjection()
 		{
 			// Create the injection thread if it doesn't exist
-			if (injectionThread?.ThreadState == System.Threading.ThreadState.Stopped)
+			if (InjectionThread?.ThreadState == System.Threading.ThreadState.Stopped)
 			{
 				CreateInjectionThread();
 			}
 
 			DateTime start = DateTime.Now;
-			gamePath = txtGamePath.Text;
-			string processName = Path.GetFileNameWithoutExtension(gamePath);
+			CurrentGamePath = txtGamePath.Text;
+			string processName = Path.GetFileNameWithoutExtension(CurrentGamePath);
 
 			btnLaunchGame.Enabled = false;
 			btnLaunchGame.Text = "Waiting for process...";
@@ -110,8 +101,8 @@ namespace Launcher
 			// Wait 30 seconds for Origin to launch the game
 			while ((DateTime.Now - start).Seconds < PROCESS_TIMEOUT)
 			{
-				Process[] procsses = Process.GetProcessesByName(processName);
-				Process ttf2Process = procsses.Length > 0 ? procsses[0] : null;
+				Process[] processes = Process.GetProcessesByName(processName);
+				Process ttf2Process = processes.Length > 0 ? processes[0] : null;
 				if (ttf2Process == null)
 				{
 					continue;
@@ -119,18 +110,22 @@ namespace Launcher
 
 				try
 				{
-					Inject(ttf2Process);
+					Process ParentProcess = ttf2Process.GetParentProcess();
+					if ( ParentProcess != null && ParentProcess.ProcessName == ORIGIN_PROCESS_NAME )
+					{
+						Inject( ttf2Process );
+					}
 				}
 				catch (Win32Exception e)
 				{
 					MessageBox.Show("Failed to inject SDK into Titanfall 2. Error Message = " + e.Message + ", Error Code = " + e.NativeErrorCode, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					ttf2Process.Kill();
+					ttf2Process?.Kill();
 					return;
 				}
 				catch (Exception e)
 				{
 					MessageBox.Show("Failed to inject SDK into Titanfall 2. Error Message = " + e.Message, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					ttf2Process.Kill();
+					ttf2Process?.Kill();
 					return;
 				}
 				finally
@@ -147,10 +142,10 @@ namespace Launcher
 		private void Inject(Process targetProcess)
 		{
 			Injector syringe = new Injector(targetProcess);
-			syringe.SetDLLSearchPath(Directory.GetCurrentDirectory());
-			syringe.InjectLibrary(DLL_NAME);
-			syringe.CallExport(DLL_NAME, DLL_FUNC_CONSOLE);
-			syringe.CallExport(DLL_NAME, DLL_FUNC_INIT);
+			syringe.SetDLLSearchPath( Directory.GetCurrentDirectory() );
+			syringe.InjectLibrary( DLL_NAME );
+			syringe.CallExport( DLL_NAME, DLL_FUNC_CONSOLE );
+			syringe.CallExport( DLL_NAME, DLL_FUNC_INIT );
 
 			TTF2Process = targetProcess;
 			SyringeInstance = syringe;
@@ -220,14 +215,6 @@ namespace Launcher
 					await Task.Factory.StartNew( () => DisplayedMod.Value.WriteToMemory() );
 				}
 			}
-
-			// 1E8C9D3F1C0
-			/*
-			long Address = Convert.ToInt64( "1E8C9D3F1C0", 16 );
-			byte[] Bytes = new byte[] { 0x00, 0x00 };
-			int bytesWritten = Modder.MemoryModder.Instance.WriteMemory( Address, Bytes );
-			Debug.WriteLine( $"Wrote bytes? {bytesWritten}" );
-			*/
 		}
 
 		private void lookupGeneratorToolStripMenuItem_Click( object sender, EventArgs e )
@@ -255,32 +242,10 @@ namespace Launcher
 			ConsoleWatcher?.UpdateWatchPath( txtGamePath.Text );
 		}
 
-		// @todo: actually code this
 		private void spawnListGeneratorToolStripMenuItem_Click( object sender, EventArgs e )
 		{
-			List<string> ModelsList = new List<string>();
-			AddFilesInDirectory( ModelsList, @"F:\Projects\Titanfall_vpk_replacement\englishclient_sp_timeshift_spoke\models" );
-
-			StreamWriter Writer = File.CreateText( "NewSpawnList.txt" );
-			for (int i = 0; i < ModelsList.Count; ++i )
-			{
-				ModelsList[ i ] = ModelsList[ i ].Replace( @"F:\Projects\Titanfall_vpk_replacement\englishclient_sp_timeshift_spoke\", "" );
-				ModelsList[ i ] = ModelsList[ i ].Replace( @"\", @"/" );
-				Writer.WriteLine( ModelsList[ i ] );
-			}
-			Writer.Close();
-		}
-
-		private void AddFilesInDirectory( List<string> ModelsList, string Path )
-		{
-			foreach( var SubDir in Directory.GetDirectories( Path ) )
-			{
-				AddFilesInDirectory( ModelsList, SubDir );
-			}
-			foreach(var File in Directory.GetFiles( Path ))
-			{
-				ModelsList.Add( File );
-			}
+			Forms.SpawnlistGenerator Generator = new Forms.SpawnlistGenerator();
+			Generator.Show();
 		}
 
 		// @todo: remove this

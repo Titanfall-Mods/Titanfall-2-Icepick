@@ -134,6 +134,7 @@
     <Compile Include="Syringe\Win32\Enums.cs" />
     <Compile Include="Syringe\Win32\Imports.cs" />
     <Compile Include="Syringe\Win32\Structs.cs" />
+    <Compile Include="Utils\ProcessUtils.cs" />
     <EmbeddedResource Include="Controls\ModWriteToMemoryHeader.resx">
       <DependentUpon>ModWriteToMemoryHeader.cs</DependentUpon>
     </EmbeddedResource>
