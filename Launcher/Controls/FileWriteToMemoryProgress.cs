@@ -17,7 +17,7 @@ namespace Launcher.Controls
 			InitializeComponent();
 		}
 
-		public ModDocuments.ModBase.File File;
+		public ModDocuments.ModFile File;
 
 		public string ModName
 		{

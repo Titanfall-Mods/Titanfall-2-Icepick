@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using JsonFx.Json;
+using Launcher.ModDocuments;
 
 namespace Launcher
 {
@@ -73,12 +74,12 @@ namespace Launcher
 		public static void WriteToFieldFilesList( ModJson TargetMod, KeyValuePair<string, object> DataPair )
 		{
 			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
-			List<File> TargetField = Field.GetValue( TargetMod ) as List<File>;
+			List<ModFile> TargetField = Field.GetValue( TargetMod ) as List<ModFile>;
 
 			foreach ( dynamic Data in ( DataPair.Value as System.Dynamic.ExpandoObject[] ) )
 			{
 				IDictionary<String, object> DataDict = (IDictionary<String, object>) Data;
-				File NewFile = new File();
+				ModFile NewFile = new ModFile();
 				NewFile.id = GetExpandoProperty( DataDict, "id", string.Empty );
 				NewFile.ComparisonString = GetExpandoProperty( DataDict, "ComparisonString", string.Empty );
 				NewFile.ReplacedCodeFile = GetExpandoProperty( DataDict, "ReplacedCodeFile", string.Empty );

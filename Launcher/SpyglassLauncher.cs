@@ -34,6 +34,8 @@ namespace Launcher
 		private Injector SyringeInstance;
 		private Process TTF2Process;
 
+		public static bool DeveloperMode = true;
+
 		public SpyglassLauncher()
 		{
 			InitializeComponent();
@@ -55,6 +57,9 @@ namespace Launcher
 					DisplayedMods.Add( Index, NewMod );
 				}
 			}
+
+			// Update developer mode checkbox
+			developerToolStripMenuItem.Checked = SpyglassLauncher.DeveloperMode;
 
 			// Watch the log file path so that we can update them in the console
 			ConsoleWatcher = new Modder.ConsoleFileWatcher( txtGamePath.Text );
@@ -164,10 +169,10 @@ namespace Launcher
 			}
 		}
 
-		private void optionMenuItem_Click(object sender, EventArgs e)
+		private void developerMenuItem_Click( object sender, EventArgs e )
 		{
-			ToolStripMenuItem item = (ToolStripMenuItem)sender;
-			item.Checked = !item.Checked;
+			developerToolStripMenuItem.Checked = !developerToolStripMenuItem.Checked;
+			SpyglassLauncher.DeveloperMode = developerToolStripMenuItem.Checked;
 		}
 
 		private void quitToolStripMenuItem_Click(object sender, EventArgs e)

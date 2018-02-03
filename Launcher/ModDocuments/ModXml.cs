@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Reflection;
+using Launcher.ModDocuments;
 
 namespace Launcher
 {
@@ -22,7 +23,7 @@ namespace Launcher
 			{ "Contacts", WriteToFieldStringList },
 		};
 
-		public delegate void DocumentFileDelegate( ref File Target, XElement Node );
+		public delegate void DocumentFileDelegate( ref ModFile Target, XElement Node );
 		private Dictionary<string, DocumentFileDelegate> DocumentFileActions = new Dictionary<string, DocumentFileDelegate>()
 		{
 			{ "ComparisonString", WriteAsFieldString },
@@ -50,15 +51,15 @@ namespace Launcher
 			}
 
 
-			foreach(File f in Files)
+			foreach( ModFile f in Files)
 			{
 				Debug.WriteLine( $"f: {f}" );
 			}
 		}
 
-		protected File CreateFileFromXMLElement( XElement FromElement )
+		protected ModFile CreateFileFromXMLElement( XElement FromElement )
 		{
-			File NewFile = new File();
+			ModFile NewFile = new ModFile();
 			NewFile.ComparisonString = string.Empty;
 			NewFile.ReplacedCodeFile = string.Empty;
 			NewFile.AddressOffset = 0;
@@ -95,7 +96,7 @@ namespace Launcher
 			TargetField.Add( Node.Value );
 		}
 
-		public static void WriteAsFieldString( ref File Target, XElement Node )
+		public static void WriteAsFieldString( ref ModFile Target, XElement Node )
 		{
 			FieldInfo Field = typeof( ModXml ).GetField( Node.Name.LocalName, BindingFlags.Instance | BindingFlags.NonPublic );
 			Field.SetValue( Target, Node.Value );

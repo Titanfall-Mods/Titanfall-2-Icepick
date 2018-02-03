@@ -31,7 +31,7 @@ namespace Launcher.Forms
 			Header.Text = Mod.Path;
 			flowLayoutPanel.Controls.Add( Header );
 
-			foreach ( ModBase.File F in Mod.Files)
+			foreach ( ModFile F in Mod.Files)
 			{
 				FileWriteToMemoryProgress Progress = new FileWriteToMemoryProgress();
 				Progress.File = F;

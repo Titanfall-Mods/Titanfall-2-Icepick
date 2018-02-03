@@ -33,12 +33,13 @@
 			this.txtGamePath = new System.Windows.Forms.TextBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.developerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lookupGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lookupScannerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.spawnListGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sigScanTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
@@ -50,7 +51,6 @@
 			this.tabConsole = new System.Windows.Forms.TabPage();
 			this.listConsoleTags = new System.Windows.Forms.ListBox();
 			this.richTextBoxConsole = new System.Windows.Forms.RichTextBox();
-			this.sigScanTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl.SuspendLayout();
@@ -111,23 +111,23 @@
 			// optionToolStripMenuItem
 			// 
 			this.optionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.debugToolStripMenuItem,
+            this.developerToolStripMenuItem,
             this.quitToolStripMenuItem});
 			this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
 			this.optionToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
 			this.optionToolStripMenuItem.Text = "Options";
 			// 
-			// debugToolStripMenuItem
+			// developerToolStripMenuItem
 			// 
-			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-			this.debugToolStripMenuItem.Text = "Debug";
-			this.debugToolStripMenuItem.Click += new System.EventHandler(this.optionMenuItem_Click);
+			this.developerToolStripMenuItem.Name = "developerToolStripMenuItem";
+			this.developerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.developerToolStripMenuItem.Text = "Developer";
+			this.developerToolStripMenuItem.Click += new System.EventHandler(this.developerMenuItem_Click);
 			// 
 			// quitToolStripMenuItem
 			// 
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.quitToolStripMenuItem.Text = "Quit";
 			this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
 			// 
@@ -162,6 +162,13 @@
 			this.spawnListGeneratorToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
 			this.spawnListGeneratorToolStripMenuItem.Text = "Spawn List Generator";
 			this.spawnListGeneratorToolStripMenuItem.Click += new System.EventHandler(this.spawnListGeneratorToolStripMenuItem_Click);
+			// 
+			// sigScanTestToolStripMenuItem
+			// 
+			this.sigScanTestToolStripMenuItem.Name = "sigScanTestToolStripMenuItem";
+			this.sigScanTestToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.sigScanTestToolStripMenuItem.Text = "SigScan Test";
+			this.sigScanTestToolStripMenuItem.Click += new System.EventHandler(this.sigScanTestToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -288,13 +295,6 @@
 			this.richTextBoxConsole.Text = "";
 			this.richTextBoxConsole.WordWrap = false;
 			// 
-			// sigScanTestToolStripMenuItem
-			// 
-			this.sigScanTestToolStripMenuItem.Name = "sigScanTestToolStripMenuItem";
-			this.sigScanTestToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.sigScanTestToolStripMenuItem.Text = "SigScan Test";
-			this.sigScanTestToolStripMenuItem.Click += new System.EventHandler(this.sigScanTestToolStripMenuItem_Click);
-			// 
 			// SpyglassLauncher
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -325,7 +325,7 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem optionToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem developerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.StatusStrip statusStrip1;
