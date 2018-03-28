@@ -98,12 +98,12 @@ namespace Syringe
 
             // iterate through all struct fields, handling customs, and using Marshal.StructToPtr for others
             uint extraDataOffset = 0;
-            uint structBase = (uint)ptr.ToInt32();
-            uint structSize = (uint)Marshal.SizeOf(structure);
+			long structBase = ptr.ToInt64();
+            uint structSize = (uint) Marshal.SizeOf(structure);
 
             foreach(FieldInfo field in structure.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance))
             {
-                uint fieldLoc = structBase + (uint)Marshal.OffsetOf(structure.GetType(), field.Name);
+				long fieldLoc = structBase + Marshal.OffsetOf( structure.GetType(), field.Name ).ToInt64();
                 if(field.IsDefined(typeof(CustomMarshalAsAttribute), true))
                 {
                     byte[] bytes;
@@ -121,12 +121,12 @@ namespace Syringe
                         default:
                             throw new NotSupportedException("Operation not yet supported");
                     }
-                    uint dataLoc = structBase + structSize + extraDataOffset;
+					long dataLoc = structBase + structSize + extraDataOffset;
                     Marshal.WriteIntPtr(new IntPtr(fieldLoc), new IntPtr(dataLoc));
                     // write the raw bytes to dataLoc
                     for(int i = 0; i < bytes.Length; i++, extraDataOffset++)
                     {
-                        Marshal.WriteByte(new IntPtr(dataLoc + (uint)i), bytes[i]);
+                        Marshal.WriteByte(new IntPtr(dataLoc + i), bytes[i]);
                     }
                 }
                 else
@@ -209,14 +209,14 @@ namespace Syringe
             if(!IsCustomMarshalType(structureType)) // not CustomMarshalType - don't need to / can't rebase
                 return;
 
-            int addressDiff = targetAddress.ToInt32() - baseAddress.ToInt32();
+            long addressDiff = targetAddress.ToInt64() - baseAddress.ToInt64();
             foreach(FieldInfo field in structureType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance))
             {
                 if(field.IsDefined(typeof(CustomMarshalAsAttribute), true))
                 {
-                    IntPtr fieldAddr = new IntPtr(baseAddress.ToInt32() + Marshal.OffsetOf(structureType, field.Name).ToInt32());
+                    IntPtr fieldAddr = new IntPtr(baseAddress.ToInt64() + Marshal.OffsetOf(structureType, field.Name).ToInt64());
                     IntPtr current = Marshal.ReadIntPtr(fieldAddr);
-                    IntPtr newLoc = new IntPtr(current.ToInt32() + addressDiff);
+                    IntPtr newLoc = new IntPtr(current.ToInt64() + addressDiff);
                     Marshal.WriteIntPtr(fieldAddr, newLoc);
                 }
             }
