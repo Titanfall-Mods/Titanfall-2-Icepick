@@ -26,6 +26,8 @@ namespace Launcher.ModDocuments
 		public string ComparisonString;
 		public string ReplacedCodeFile;
 		public long AddressOffset;
+		public string ChunkName;
+		public string Context;
 
 		public float Progress;
 		public bool? Success;
@@ -47,6 +49,35 @@ namespace Launcher.ModDocuments
 			{ "includefolder", IncludeFolderPreprocessor },
 			{ "if", NullPreprocessor },
 		};
+
+		public void ReadFileContents()
+		{
+			string ReplacementPath = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{ReplacedCodeFile}";
+			Contents = File.ReadAllText( ReplacementPath );
+		}
+
+		public void SendToSDK( ModBase ParentMod )
+		{
+			this.ParentMod = ParentMod;
+			ReadAndProcessContents();
+
+			if ( Contents.Length > 0 )
+			{
+				if ( Context == "sv" )
+				{
+					Modder.SDKInterface.AddServerFile( this.ChunkName, Contents );
+				}
+				else
+				{
+					Modder.SDKInterface.AddClientFile( this.ChunkName, Contents );
+				}
+			}
+			else
+			{
+				string ReplacementPath = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{ReplacedCodeFile}";
+				Console.WriteLine( $"Error: Failed to write file {ReplacementPath} to SDK!" );
+			}
+		}
 
 		private void ReadAndProcessContents()
 		{
@@ -159,7 +190,7 @@ namespace Launcher.ModDocuments
 			int BytesWritten;
 			this.ParentMod = ParentMod;
 
-			try
+// 			try
 			{
 				// Read the files we need to 
 				ReadAndProcessContents();
@@ -230,11 +261,11 @@ namespace Launcher.ModDocuments
 				return true;
 
 			}
-			catch ( Exception e )
-			{
-				LastError = e.Message;
-				return false;
-			}
+// 			catch ( Exception e )
+// 			{
+// 				LastError = e.Message;
+// 				return false;
+// 			}
 		}
 
 		public byte[] LongToByteArray( long Input, bool IsLittleEndian = false )

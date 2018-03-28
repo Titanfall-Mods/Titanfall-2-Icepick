@@ -39,7 +39,6 @@
 			this.lookupGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lookupScannerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.spawnListGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.sigScanTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
@@ -51,6 +50,7 @@
 			this.tabConsole = new System.Windows.Forms.TabPage();
 			this.listConsoleTags = new System.Windows.Forms.ListBox();
 			this.richTextBoxConsole = new System.Windows.Forms.RichTextBox();
+			this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl.SuspendLayout();
@@ -120,14 +120,14 @@
 			// developerToolStripMenuItem
 			// 
 			this.developerToolStripMenuItem.Name = "developerToolStripMenuItem";
-			this.developerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.developerToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
 			this.developerToolStripMenuItem.Text = "Developer";
 			this.developerToolStripMenuItem.Click += new System.EventHandler(this.developerMenuItem_Click);
 			// 
 			// quitToolStripMenuItem
 			// 
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
 			this.quitToolStripMenuItem.Text = "Quit";
 			this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
 			// 
@@ -137,7 +137,7 @@
             this.lookupGeneratorToolStripMenuItem,
             this.lookupScannerToolStripMenuItem,
             this.spawnListGeneratorToolStripMenuItem,
-            this.sigScanTestToolStripMenuItem});
+            this.writeToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
 			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
 			this.toolsToolStripMenuItem.Text = "Tools";
@@ -162,13 +162,6 @@
 			this.spawnListGeneratorToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
 			this.spawnListGeneratorToolStripMenuItem.Text = "Spawn List Generator";
 			this.spawnListGeneratorToolStripMenuItem.Click += new System.EventHandler(this.spawnListGeneratorToolStripMenuItem_Click);
-			// 
-			// sigScanTestToolStripMenuItem
-			// 
-			this.sigScanTestToolStripMenuItem.Name = "sigScanTestToolStripMenuItem";
-			this.sigScanTestToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.sigScanTestToolStripMenuItem.Text = "SigScan Test";
-			this.sigScanTestToolStripMenuItem.Click += new System.EventHandler(this.sigScanTestToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -295,6 +288,13 @@
 			this.richTextBoxConsole.Text = "";
 			this.richTextBoxConsole.WordWrap = false;
 			// 
+			// writeToolStripMenuItem
+			// 
+			this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
+			this.writeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.writeToolStripMenuItem.Text = "Send to SDK";
+			this.writeToolStripMenuItem.Click += new System.EventHandler(this.writeToolStripMenuItem_Click);
+			// 
 			// SpyglassLauncher
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,7 +344,7 @@
 		private System.Windows.Forms.ToolStripMenuItem lookupGeneratorToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lookupScannerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem spawnListGeneratorToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem sigScanTestToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
 	}
 }
 

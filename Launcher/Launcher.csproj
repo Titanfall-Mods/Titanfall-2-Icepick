@@ -114,10 +114,10 @@
     <Compile Include="Modder\ConsoleControlWriter.cs" />
     <Compile Include="Modder\ConsoleFileWatcher.cs" />
     <Compile Include="Modder\MultiConsoleWriter.cs" />
+    <Compile Include="Modder\SDKInterface.cs" />
     <Compile Include="ModDocuments\ModBase.cs" />
     <Compile Include="ModDocuments\ModFile.cs" />
     <Compile Include="ModDocuments\ModJson.cs" />
-    <Compile Include="ModDocuments\ModXml.cs" />
     <Compile Include="Modder\MemoryModder.cs" />
     <Compile Include="Modder\MemoryScanner.cs" />
     <Compile Include="SpyglassLauncher.cs">

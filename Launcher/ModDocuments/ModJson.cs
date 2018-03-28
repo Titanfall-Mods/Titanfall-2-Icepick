@@ -81,6 +81,8 @@ namespace Launcher
 				IDictionary<String, object> DataDict = (IDictionary<String, object>) Data;
 				ModFile NewFile = new ModFile();
 				NewFile.id = GetExpandoProperty( DataDict, "id", string.Empty );
+				NewFile.ChunkName = GetExpandoProperty( DataDict, "ChunkName", string.Empty );
+				NewFile.Context = GetExpandoProperty( DataDict, "Context", string.Empty );
 				NewFile.ComparisonString = GetExpandoProperty( DataDict, "ComparisonString", string.Empty );
 				NewFile.ReplacedCodeFile = GetExpandoProperty( DataDict, "ReplacedCodeFile", string.Empty );
 				NewFile.AddressOffset = GetExpandoProperty( DataDict, "AddressOffset", 0 );

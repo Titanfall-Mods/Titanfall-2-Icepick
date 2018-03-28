@@ -15,6 +15,13 @@ namespace Launcher.ModDocuments
 			public string ScriptPath;
 		}
 
+		public class ContextChunkFile
+		{
+			public string Chunk;
+			public string ScriptPath;
+			public string Context;
+		}
+
 		public string Path;
 		protected string Name;
 		protected string Description;
@@ -49,6 +56,15 @@ namespace Launcher.ModDocuments
 					Debug.WriteLine( $"Failed to write mod file into memory: {F}" );
 				}
 			} );
+		}
+
+		public void SendToSDK()
+		{
+			Debug.WriteLine( $"Writing {Name} files to SDK..." );
+			foreach( ModFile File in Files )
+			{
+				File.SendToSDK( this );
+			}
 		}
 
 		public override string ToString()

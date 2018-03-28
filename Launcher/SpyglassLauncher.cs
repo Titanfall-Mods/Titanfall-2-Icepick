@@ -20,20 +20,20 @@ namespace Launcher
 
 	public partial class SpyglassLauncher : Form
 	{
-		private const float PROCESS_TIMEOUT = 30;
+		private const float PROCESS_TIMEOUT = 10;
 		private const string DEFAULT_GAME_PATH = "C:/Program Files (x86)/Origin Games/Titanfall2/Titanfall2.exe";
 		private const string ORIGIN_PROCESS_NAME = "Origin";
-		private const string DLL_NAME = "TitanfallSDK.dll";
-		private const string DLL_FUNC_CONSOLE = "InitializeSDKConsole";
-		private const string DLL_FUNC_INIT = "InitializeSDK";
+		public const string DLL_NAME = "TTF2SDK.dll";
+		public const string DLL_FUNC_CONSOLE = "InitializeSDKConsole";
+		public const string DLL_FUNC_INIT = "InitializeSDK";
 
 		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
 		private Modder.ConsoleFileWatcher ConsoleWatcher;
 		private Thread InjectionThread;
 		private string CurrentGamePath;
-		private Injector SyringeInstance;
 		private Process TTF2Process;
 
+		public static Injector SyringeInstance;
 		public static bool DeveloperMode = true;
 
 		public SpyglassLauncher()
@@ -94,6 +94,7 @@ namespace Launcher
 			if (InjectionThread?.ThreadState == System.Threading.ThreadState.Stopped)
 			{
 				CreateInjectionThread();
+				return;
 			}
 
 			DateTime start = DateTime.Now;
@@ -123,24 +124,22 @@ namespace Launcher
 				}
 				catch (Win32Exception e)
 				{
-					MessageBox.Show("Failed to inject SDK into Titanfall 2. Error Message = " + e.Message + ", Error Code = " + e.NativeErrorCode, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					ttf2Process?.Kill();
-					return;
+					Console.WriteLine( "Failed to inject SDK into Titanfall 2. Error Message = " + e.Message + ", Error Code = " + e.NativeErrorCode, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show("Failed to inject SDK into Titanfall 2. Error Message = " + e.Message, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					ttf2Process?.Kill();
-					return;
+					Console.WriteLine("Failed to inject SDK into Titanfall 2. Error Message = " + e.Message, "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				finally
 				{
 					ResetLaunchButton();
 				}
-				return;
+
+				// Try again every second
+				Thread.Sleep( 250 );
 			}
 
-			MessageBox.Show($"Failed to find game process after {PROCESS_TIMEOUT} seconds.", "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+// 			MessageBox.Show($"Failed to find game process after {PROCESS_TIMEOUT} seconds.", "Failed to launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			ResetLaunchButton();
 		}
 
@@ -149,8 +148,6 @@ namespace Launcher
 			Injector syringe = new Injector(targetProcess);
 			syringe.SetDLLSearchPath( Directory.GetCurrentDirectory() );
 			syringe.InjectLibrary( DLL_NAME );
-			syringe.CallExport( DLL_NAME, DLL_FUNC_CONSOLE );
-			syringe.CallExport( DLL_NAME, DLL_FUNC_INIT );
 
 			TTF2Process = targetProcess;
 			SyringeInstance = syringe;
@@ -253,10 +250,16 @@ namespace Launcher
 			Generator.Show();
 		}
 
-		// @todo: remove this
-		private void sigScanTestToolStripMenuItem_Click( object sender, EventArgs e )
+		private void writeToolStripMenuItem_Click( object sender, EventArgs e )
 		{
-			SyringeInstance.CallExport( DLL_NAME, "TestSigscan" );
+			foreach ( var DisplayedMod in DisplayedMods )
+			{
+				if ( listMods.GetItemChecked( DisplayedMod.Key ) )
+				{
+					Debug.WriteLine( "Sending to SDK " + DisplayedMod.Value.ToString() );
+					DisplayedMod.Value.SendToSDK();
+				}
+			}
 		}
 	}
 
