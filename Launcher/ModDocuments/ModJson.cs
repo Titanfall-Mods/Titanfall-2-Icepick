@@ -22,8 +22,7 @@ namespace Launcher
 			{ "Description", WriteAsFieldString },
 			{ "Authors", WriteToFieldStringList },
 			{ "Contacts", WriteToFieldStringList },
-			{ "Files", WriteToFieldFilesList },
-			{ "AppendedFiles", WriteAppendedFilesList }
+			{ "Files", WriteToFieldFilesList }
 		};
 
 		public new static bool ShouldLoad( string ModPath )
@@ -35,22 +34,40 @@ namespace Launcher
 		{
 			base.Load( ModPath );
 
-			StreamReader FileReader = new StreamReader( $"{Path}{System.IO.Path.DirectorySeparatorChar}{MOD_DOCUMENT_NAME}" );
-			string ModDocumentContents = FileReader.ReadToEnd();
-			FileReader.Close();
-
-			JsonReader Reader = new JsonReader();
-			var JsonData = Reader.Read<Dictionary<string, object>>( ModDocumentContents );
-			foreach ( var Pair in JsonData )
+			// Load json mod file
+			try
 			{
-				if ( DocumentNodeActions.ContainsKey( Pair.Key ) )
+				StreamReader FileReader = new StreamReader( $"{ModPath}{System.IO.Path.DirectorySeparatorChar}{MOD_DOCUMENT_NAME}" );
+				string ModDocumentContents = FileReader.ReadToEnd();
+				FileReader.Close();
+
+				JsonReader Reader = new JsonReader();
+				var JsonData = Reader.Read<Dictionary<string, object>>( ModDocumentContents );
+				foreach ( var Pair in JsonData )
 				{
-					DocumentNodeActions[ Pair.Key ]( this, Pair );
+					if ( DocumentNodeActions.ContainsKey( Pair.Key ) )
+					{
+						DocumentNodeActions[ Pair.Key ]( this, Pair );
+					}
+					else
+					{
+						Debug.WriteLine( $"Unhandled key in json mod document, {Pair.Key} = {Pair.Value}" );
+					}
 				}
-				else
-				{
-					Debug.WriteLine( $"Unhandled key in json mod document, {Pair.Key} = {Pair.Value}" );
-				}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine( $"[Warning] Could not load mod: {e.Message}" );
+			}
+
+			// Setup file watchers
+			try
+			{
+				WatchFiles();
+			}
+			catch ( Exception e )
+			{
+				Console.WriteLine( $"[Warning] Failed to setup watcher on mod '{ModPath}', auto-reload may not work. {e.Message}" );
 			}
 		}
 
@@ -79,29 +96,12 @@ namespace Launcher
 			foreach ( dynamic Data in ( DataPair.Value as System.Dynamic.ExpandoObject[] ) )
 			{
 				IDictionary<String, object> DataDict = (IDictionary<String, object>) Data;
-				ModFile NewFile = new ModFile();
+				ModFile NewFile = new ModFile( TargetMod );
 				NewFile.id = GetExpandoProperty( DataDict, "id", string.Empty );
-				NewFile.ChunkName = GetExpandoProperty( DataDict, "ChunkName", string.Empty );
-				NewFile.Context = GetExpandoProperty( DataDict, "Context", string.Empty );
-				NewFile.ComparisonString = GetExpandoProperty( DataDict, "ComparisonString", string.Empty );
-				NewFile.ReplacedCodeFile = GetExpandoProperty( DataDict, "ReplacedCodeFile", string.Empty );
-				NewFile.AddressOffset = GetExpandoProperty( DataDict, "AddressOffset", 0 );
+				NewFile.Chunk = GetExpandoProperty( DataDict, "Chunk", string.Empty );
+				NewFile.ReplacementFile = GetExpandoProperty( DataDict, "Replacement", string.Empty );
+				NewFile.AppendedFiles = GetExpandoProperty( DataDict, "Appends", new string[]{} );
 				TargetField.Add( NewFile );
-			}
-		}
-
-		public static void WriteAppendedFilesList( ModJson TargetMod, KeyValuePair<string, object> DataPair )
-		{
-			FieldInfo Field = typeof( ModJson ).GetField( DataPair.Key, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
-			List<AppendedFile> TargetField = Field.GetValue( TargetMod ) as List<AppendedFile>;
-
-			foreach ( dynamic Data in ( DataPair.Value as System.Dynamic.ExpandoObject[] ) )
-			{
-				IDictionary<String, object> DataDict = (IDictionary<String, object>) Data;
-				AppendedFile NewAppendFile = new AppendedFile();
-				NewAppendFile.AppendTo = GetExpandoProperty( DataDict, "AppendTo", string.Empty );
-				NewAppendFile.ScriptPath = GetExpandoProperty( DataDict, "ScriptPath", string.Empty );
-				TargetField.Add( NewAppendFile );
 			}
 		}
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Launcher.Modder;
 
 namespace Launcher.ModDocuments
 {
@@ -23,11 +24,9 @@ namespace Launcher.ModDocuments
 		}
 
 		public string id;
-		public string ComparisonString;
-		public string ReplacedCodeFile;
-		public long AddressOffset;
-		public string ChunkName;
-		public string Context;
+		public string Chunk;
+		public string ReplacementFile;
+		public string[] AppendedFiles;
 
 		public float Progress;
 		public bool? Success;
@@ -50,51 +49,29 @@ namespace Launcher.ModDocuments
 			{ "if", NullPreprocessor },
 		};
 
-		public void ReadFileContents()
+		public ModFile( ModBase Parent )
 		{
-			string ReplacementPath = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{ReplacedCodeFile}";
-			Contents = File.ReadAllText( ReplacementPath );
+			ParentMod = Parent;
 		}
 
-		public void SendToSDK( ModBase ParentMod )
+		public void CompileFile()
 		{
-			this.ParentMod = ParentMod;
 			ReadAndProcessContents();
-
-			if ( Contents.Length > 0 )
-			{
-				if ( Context == "sv" )
-				{
-					Modder.SDKInterface.AddServerFile( this.ChunkName, Contents );
-				}
-				else
-				{
-					Modder.SDKInterface.AddClientFile( this.ChunkName, Contents );
-				}
-			}
-			else
-			{
-				string ReplacementPath = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{ReplacedCodeFile}";
-				Console.WriteLine( $"Error: Failed to write file {ReplacementPath} to SDK!" );
-			}
+			SaveContentsToOutputFolder();
 		}
 
 		private void ReadAndProcessContents()
 		{
-			// @todo: Read base file, append files, process for #includes
-
 			// Get the file contents we wish to write
-			string ReplacementPath = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{ReplacedCodeFile}";
-			Contents = File.ReadAllText( ReplacementPath );
+			string ReplacementPath = $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{ReplacementFile}";
+			Contents = File.ReadAllText( ReplacementPath, Encoding.ASCII );
+			Contents = Contents.Replace( Environment.NewLine, "\n" );
 
 			// Append files
-			foreach ( ModBase.AppendedFile AppendFile in ParentMod.AppendedFiles )
+			foreach( string AppendedFile in AppendedFiles )
 			{
-				if ( AppendFile.AppendTo == this.id )
-				{
-					string AppendString = File.ReadAllText( $"{ParentMod.Path}{Path.DirectorySeparatorChar}{AppendFile.ScriptPath}" );
-					Contents += AppendString;
-				}
+				string AppendString = File.ReadAllText( $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{AppendedFile}" );
+				Contents += AppendString;
 			}
 
 			// Process each line looking for custom preprocessors
@@ -106,7 +83,18 @@ namespace Launcher.ModDocuments
 				i++;
 				if ( i > 16 ) break;
 			}
+		}
 
+		private void SaveContentsToOutputFolder()
+		{
+			string ProcessedFilesDirectory = $"{ModsCompiler.COMPILED_OUTPUT_DIRECTORY}{Path.DirectorySeparatorChar}{Path.GetDirectoryName( Chunk )}";
+			if ( !Directory.Exists( ProcessedFilesDirectory ) )
+			{
+				Directory.CreateDirectory( ProcessedFilesDirectory );
+			}
+
+			string ProcessedFile = $"{ProcessedFilesDirectory}{Path.DirectorySeparatorChar}{Path.GetFileName( Chunk )}";
+			File.WriteAllText( ProcessedFile, Contents );
 		}
 
 		private bool PreprocessContents()
@@ -153,13 +141,13 @@ namespace Launcher.ModDocuments
 		{
 			if ( SpyglassLauncher.DeveloperMode )
 			{
-				string ProcessedFilesDirectory = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{PROCESSED_FILES_DIR}{Path.DirectorySeparatorChar}{Path.GetDirectoryName( ReplacedCodeFile )}";
+				string ProcessedFilesDirectory = $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{PROCESSED_FILES_DIR}{Path.DirectorySeparatorChar}{Path.GetDirectoryName( ReplacementFile )}";
 				if ( !Directory.Exists( ProcessedFilesDirectory ) )
 				{
 					Directory.CreateDirectory( ProcessedFilesDirectory );
 				}
 
-				string ProcessedFile = $"{ParentMod.Path}{Path.DirectorySeparatorChar}{PROCESSED_FILES_DIR}{Path.DirectorySeparatorChar}{ReplacedCodeFile}"; ;
+				string ProcessedFile = $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{PROCESSED_FILES_DIR}{Path.DirectorySeparatorChar}{ReplacementFile}"; ;
 				File.WriteAllText( ProcessedFile, Contents );
 			}
 		}
@@ -186,6 +174,7 @@ namespace Launcher.ModDocuments
 
 		private bool Internal_WriteIntoMemory( ModBase ParentMod )
 		{
+			/*
 			Debug.WriteLine( $"Writing {this} to memory..." );
 			int BytesWritten;
 			this.ParentMod = ParentMod;
@@ -266,6 +255,8 @@ namespace Launcher.ModDocuments
 // 				LastError = e.Message;
 // 				return false;
 // 			}
+*/
+			return false;
 		}
 
 		public byte[] LongToByteArray( long Input, bool IsLittleEndian = false )
@@ -300,7 +291,7 @@ namespace Launcher.ModDocuments
 
 		public override string ToString()
 		{
-			return $"[ModFile {ReplacedCodeFile} (@{AddressOffset})]";
+			return $"[ModFile {ReplacementFile} (@{Chunk})]";
 		}
 
 		private static void ReplaceContentsLineWithFileContents( ModFile TargetFile, int LineIdx, string FilePath, bool InsertInsteadOfReplace = false )
@@ -343,7 +334,7 @@ namespace Launcher.ModDocuments
 		{
 			Debug.WriteLine( $"Processing #include on {TargetFile} at line {LineIdx + 1}: {Data}" );
 
-			string FilePath = $"{TargetFile.ParentMod.Path}{Path.DirectorySeparatorChar}{Data}";
+			string FilePath = $"{TargetFile.ParentMod.ModPath}{Path.DirectorySeparatorChar}{Data}";
 			ReplaceContentsLineWithFileContents( TargetFile, LineIdx, FilePath );
 
 			return true;
@@ -354,7 +345,7 @@ namespace Launcher.ModDocuments
 			Debug.WriteLine( $"Processing #includefolder on {TargetFile} at line {LineIdx + 1}: {Data}" );
 
 			// Split and parse the input data to allow for wildcard includes
-			string FolderPath = $"{TargetFile.ParentMod.Path}{Path.DirectorySeparatorChar}";
+			string FolderPath = $"{TargetFile.ParentMod.ModPath}{Path.DirectorySeparatorChar}";
 			string FilePattern = "*";
 			if ( Data.Contains( '/' ) && !Data.EndsWith( "/" ) )
 			{

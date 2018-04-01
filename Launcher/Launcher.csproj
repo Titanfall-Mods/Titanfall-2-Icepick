@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="Modder\ConsoleControlWriter.cs" />
     <Compile Include="Modder\ConsoleFileWatcher.cs" />
+    <Compile Include="Modder\ModsCompiler.cs" />
     <Compile Include="Modder\MultiConsoleWriter.cs" />
     <Compile Include="Modder\SDKInterface.cs" />
     <Compile Include="ModDocuments\ModBase.cs" />

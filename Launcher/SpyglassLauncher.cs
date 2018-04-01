@@ -14,6 +14,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Launcher.Utils;
+using Launcher.ModDocuments;
+using Launcher.Modder;
 
 namespace Launcher
 {
@@ -26,43 +28,115 @@ namespace Launcher
 		public const string DLL_NAME = "TTF2SDK.dll";
 		public const string DLL_FUNC_CONSOLE = "InitializeSDKConsole";
 		public const string DLL_FUNC_INIT = "InitializeSDK";
+		public const string MODS_DIRECTORY = "Mods";
 
-		private Dictionary<int, ModJson> DisplayedMods = new Dictionary<int, ModJson>();
 		private Modder.ConsoleFileWatcher ConsoleWatcher;
 		private Thread InjectionThread;
 		private string CurrentGamePath;
 		private Process TTF2Process;
 
+		private List<FileSystemWatcher> ModJsonWatchers = new List<FileSystemWatcher>();
+
 		public static Injector SyringeInstance;
 		public static bool DeveloperMode = true;
+		public static List<ModBase> DisplayedMods = new List<ModBase>();
 
 		public SpyglassLauncher()
 		{
 			InitializeComponent();
 
 			// Redirect outputs to the in-app console
-			Console.SetOut( new Modder.MultiConsoleWriter( new Modder.ConsoleControlWriter( richTextBoxConsole ), Console.Out ) );
-			var ConsoleDebugListener = new Modder.ConsoleControlTraceListener( richTextBoxConsole );
-			Debug.Listeners.Add( ConsoleDebugListener );
+// 			Console.SetOut( new Modder.MultiConsoleWriter( new Modder.ConsoleControlWriter( richTextBoxConsole ), Console.Out ) );
+// 			var ConsoleDebugListener = new Modder.ConsoleControlTraceListener( richTextBoxConsole );
+// 			Debug.Listeners.Add( ConsoleDebugListener );
 
 			txtGamePath.Text = DEFAULT_GAME_PATH;
 
-			foreach ( var ModPath in Directory.GetDirectories( "Mods" ) )
+			foreach ( var ModPath in Directory.GetDirectories( MODS_DIRECTORY ) )
 			{
-				if ( ModJson.ShouldLoad( ModPath ) )
-				{
-					int Index = listMods.Items.Add( ModPath );
-					ModJson NewMod = new ModJson();
-					NewMod.Load( ModPath );
-					DisplayedMods.Add( Index, NewMod );
-				}
+				// Load the json mod
+				LoadModFromDirectory( ModPath );
+
+				// Watch the json for changes, watch outside of the mod so we can reload it immediately if there were json errors
+				FileSystemWatcher JsonWatcher = new FileSystemWatcher();
+				JsonWatcher.Path = ModPath;
+				JsonWatcher.NotifyFilter = NotifyFilters.LastWrite;
+				JsonWatcher.Filter = "*.json";
+				JsonWatcher.Changed += JsonModFileUpdated;
+				JsonWatcher.EnableRaisingEvents = true;
+				ModJsonWatchers.Add( JsonWatcher );
 			}
 
 			// Update developer mode checkbox
 			developerToolStripMenuItem.Checked = SpyglassLauncher.DeveloperMode;
+		}
 
-			// Watch the log file path so that we can update them in the console
-			ConsoleWatcher = new Modder.ConsoleFileWatcher( txtGamePath.Text );
+		protected void LoadModFromDirectory( string Directory, bool UseInvoke = false )
+		{
+			try
+			{
+				if ( ModJson.ShouldLoad( Directory ) )
+				{
+					if ( UseInvoke )
+					{
+						Invoke( new MethodInvoker( delegate
+						{
+							LoadModFromDirectory_Internal( Directory );
+						} ) );
+					}
+					else
+					{
+						LoadModFromDirectory_Internal( Directory );
+					}
+				}
+			}
+			catch ( Exception e )
+			{
+				Console.WriteLine( $"[Error] {e.Message}" );
+			}
+		}
+
+		protected void LoadModFromDirectory_Internal( string Directory )
+		{
+			int Index = listMods.Items.Add( Directory );
+			ModJson NewMod = new ModJson();
+			NewMod.Load( Directory );
+			DisplayedMods.Add( NewMod );
+		}
+
+		private void JsonModFileUpdated( object sender, FileSystemEventArgs e )
+		{
+			string ModPath = Path.GetDirectoryName( e.FullPath );
+			Console.WriteLine( $"{ModPath} updated, reloading mod..." );
+			for( int i = 0; i < DisplayedMods.Count; ++i )
+			{
+				ModBase Mod = DisplayedMods[i];
+				if ( ModPath == Mod.ModPath )
+				{
+					bool bWasChecked = listMods.GetItemChecked( i );
+
+					// Cleanup previous watchers
+					Mod.CleanupFileWatchers();
+
+					// Remove from the mods list
+					Invoke( new MethodInvoker( delegate
+					{
+						listMods.Items.RemoveAt( i );
+					} ) );
+					DisplayedMods.RemoveAt( i );
+
+					// Reload the mod
+					LoadModFromDirectory( ModPath, UseInvoke: true );
+
+					// Recheck the mod entry if it was already checked
+					Invoke( new MethodInvoker( delegate
+					{
+						listMods.SetItemChecked( listMods.Items.Count - 1, bWasChecked );
+					} ) );
+
+					break;
+				}
+			}
 		}
 
 		// Injection
@@ -151,6 +225,8 @@ namespace Launcher
 
 			TTF2Process = targetProcess;
 			SyringeInstance = syringe;
+
+			SDKInterface.SetReplacementsPath();
 		}
 
 		// Actions
@@ -185,38 +261,14 @@ namespace Launcher
 		private void ResetLaunchButton()
 		{
 			btnLaunchGame.Invoke(new MethodInvoker(delegate{
-					btnLaunchGame.Text = "Launch Game";
-					btnLaunchGame.Enabled = true;
+				btnLaunchGame.Text = "Launch Game";
+				btnLaunchGame.Enabled = true;
 			}));
 		}
 
-		private async void btnWriteMods_Click( object sender, EventArgs e )
+		private void btnWriteMods_Click( object sender, EventArgs e )
 		{
-			Forms.WriteToMemoryProgress WriteToMemory = new Forms.WriteToMemoryProgress();
-			WriteToMemory.Show();
-
-			foreach ( var DisplayedMod in DisplayedMods )
-			{
-				if ( listMods.GetItemChecked( DisplayedMod.Key ) )
-				{
-					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
-					WriteToMemory.AddModProgress( DisplayedMod.Value );
-					await Task.Factory.StartNew( () => DisplayedMod.Value.WriteToMemory() );
-				}
-			}
-
-		}
-
-		private async void InjectMods()
-		{
-			foreach( var DisplayedMod in DisplayedMods )
-			{
-				if( listMods.GetItemChecked( DisplayedMod.Key ) )
-				{
-					Debug.WriteLine( "Attempting to inject " + DisplayedMod.Value.ToString() );
-					await Task.Factory.StartNew( () => DisplayedMod.Value.WriteToMemory() );
-				}
-			}
+			ModsCompiler.CompileAllMods();
 		}
 
 		private void lookupGeneratorToolStripMenuItem_Click( object sender, EventArgs e )
@@ -250,16 +302,10 @@ namespace Launcher
 			Generator.Show();
 		}
 
-		private void writeToolStripMenuItem_Click( object sender, EventArgs e )
+		private void OnModCheckedStateChanged( object sender, ItemCheckEventArgs e )
 		{
-			foreach ( var DisplayedMod in DisplayedMods )
-			{
-				if ( listMods.GetItemChecked( DisplayedMod.Key ) )
-				{
-					Debug.WriteLine( "Sending to SDK " + DisplayedMod.Value.ToString() );
-					DisplayedMod.Value.SendToSDK();
-				}
-			}
+			ModBase Mod = DisplayedMods[ e.Index ];
+			Mod.Active = e.NewValue == CheckState.Checked;
 		}
 	}
 

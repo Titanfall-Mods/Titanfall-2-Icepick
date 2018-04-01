@@ -43,19 +43,18 @@
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.btnLaunchGame = new System.Windows.Forms.Button();
 			this.tabControl = new System.Windows.Forms.TabControl();
-			this.tabSettings = new System.Windows.Forms.TabPage();
 			this.tabMods = new System.Windows.Forms.TabPage();
 			this.listMods = new System.Windows.Forms.CheckedListBox();
 			this.btnWriteMods = new System.Windows.Forms.Button();
+			this.tabSettings = new System.Windows.Forms.TabPage();
 			this.tabConsole = new System.Windows.Forms.TabPage();
 			this.listConsoleTags = new System.Windows.Forms.ListBox();
 			this.richTextBoxConsole = new System.Windows.Forms.RichTextBox();
-			this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl.SuspendLayout();
-			this.tabSettings.SuspendLayout();
 			this.tabMods.SuspendLayout();
+			this.tabSettings.SuspendLayout();
 			this.tabConsole.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -136,8 +135,7 @@
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lookupGeneratorToolStripMenuItem,
             this.lookupScannerToolStripMenuItem,
-            this.spawnListGeneratorToolStripMenuItem,
-            this.writeToolStripMenuItem});
+            this.spawnListGeneratorToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
 			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
 			this.toolsToolStripMenuItem.Text = "Tools";
@@ -183,7 +181,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnLaunchGame.Location = new System.Drawing.Point(6, 360);
 			this.btnLaunchGame.Name = "btnLaunchGame";
-			this.btnLaunchGame.Size = new System.Drawing.Size(563, 56);
+			this.btnLaunchGame.Size = new System.Drawing.Size(444, 56);
 			this.btnLaunchGame.TabIndex = 3;
 			this.btnLaunchGame.Text = "Launch Game";
 			this.btnLaunchGame.UseVisualStyleBackColor = true;
@@ -194,8 +192,8 @@
 			this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tabControl.Controls.Add(this.tabSettings);
 			this.tabControl.Controls.Add(this.tabMods);
+			this.tabControl.Controls.Add(this.tabSettings);
 			this.tabControl.Controls.Add(this.tabConsole);
 			this.tabControl.Location = new System.Drawing.Point(12, 27);
 			this.tabControl.Name = "tabControl";
@@ -203,21 +201,10 @@
 			this.tabControl.Size = new System.Drawing.Size(583, 448);
 			this.tabControl.TabIndex = 2;
 			// 
-			// tabSettings
-			// 
-			this.tabSettings.Controls.Add(this.groupBox1);
-			this.tabSettings.Controls.Add(this.btnLaunchGame);
-			this.tabSettings.Location = new System.Drawing.Point(4, 22);
-			this.tabSettings.Name = "tabSettings";
-			this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
-			this.tabSettings.Size = new System.Drawing.Size(575, 422);
-			this.tabSettings.TabIndex = 0;
-			this.tabSettings.Text = "Settings";
-			this.tabSettings.UseVisualStyleBackColor = true;
-			// 
 			// tabMods
 			// 
 			this.tabMods.Controls.Add(this.listMods);
+			this.tabMods.Controls.Add(this.btnLaunchGame);
 			this.tabMods.Controls.Add(this.btnWriteMods);
 			this.tabMods.Location = new System.Drawing.Point(4, 22);
 			this.tabMods.Name = "tabMods";
@@ -237,18 +224,30 @@
 			this.listMods.Name = "listMods";
 			this.listMods.Size = new System.Drawing.Size(563, 349);
 			this.listMods.TabIndex = 6;
+			this.listMods.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.OnModCheckedStateChanged);
 			// 
 			// btnWriteMods
 			// 
 			this.btnWriteMods.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnWriteMods.Location = new System.Drawing.Point(6, 360);
+			this.btnWriteMods.Location = new System.Drawing.Point(456, 360);
 			this.btnWriteMods.Name = "btnWriteMods";
-			this.btnWriteMods.Size = new System.Drawing.Size(563, 56);
+			this.btnWriteMods.Size = new System.Drawing.Size(113, 56);
 			this.btnWriteMods.TabIndex = 4;
-			this.btnWriteMods.Text = "Write Mods to Memory";
+			this.btnWriteMods.Text = "Reload Mods";
 			this.btnWriteMods.UseVisualStyleBackColor = true;
 			this.btnWriteMods.Click += new System.EventHandler(this.btnWriteMods_Click);
+			// 
+			// tabSettings
+			// 
+			this.tabSettings.Controls.Add(this.groupBox1);
+			this.tabSettings.Location = new System.Drawing.Point(4, 22);
+			this.tabSettings.Name = "tabSettings";
+			this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
+			this.tabSettings.Size = new System.Drawing.Size(575, 422);
+			this.tabSettings.TabIndex = 0;
+			this.tabSettings.Text = "Settings";
+			this.tabSettings.UseVisualStyleBackColor = true;
 			// 
 			// tabConsole
 			// 
@@ -288,13 +287,6 @@
 			this.richTextBoxConsole.Text = "";
 			this.richTextBoxConsole.WordWrap = false;
 			// 
-			// writeToolStripMenuItem
-			// 
-			this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
-			this.writeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-			this.writeToolStripMenuItem.Text = "Send to SDK";
-			this.writeToolStripMenuItem.Click += new System.EventHandler(this.writeToolStripMenuItem_Click);
-			// 
 			// SpyglassLauncher
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -312,8 +304,8 @@
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.tabControl.ResumeLayout(false);
-			this.tabSettings.ResumeLayout(false);
 			this.tabMods.ResumeLayout(false);
+			this.tabSettings.ResumeLayout(false);
 			this.tabConsole.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -344,7 +336,6 @@
 		private System.Windows.Forms.ToolStripMenuItem lookupGeneratorToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lookupScannerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem spawnListGeneratorToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
 	}
 }
 

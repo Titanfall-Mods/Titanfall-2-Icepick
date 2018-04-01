@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Syringe;
 
 namespace Launcher.Modder
@@ -12,38 +13,17 @@ namespace Launcher.Modder
 	{
 
 		[StructLayout( LayoutKind.Sequential, Pack = 8 )]
-		struct OverwrittenFile
+		struct SDKInfo
 		{
-			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string Chunk;
-			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string Contents;
-			public int Length;
-
-			public OverwrittenFile( string InChunk )
-			{
-				Chunk = InChunk;
-				Contents = string.Empty;
-				Length = 0;
-			}
-
-			public void SetContents( string InContents )
-			{
-				Contents = InContents;
-				Length = Contents.Length;
-			}
+			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string Path;
 		};
 
-		public static void AddClientFile( string ChunkName, string FileContents )
+		public static void SetReplacementsPath()
 		{
-			OverwrittenFile File = new OverwrittenFile( ChunkName );
-			File.SetContents( FileContents );
-			SpyglassLauncher.SyringeInstance.CallExport( SpyglassLauncher.DLL_NAME, "AddClientFile", File );
-		}
-
-		public static void AddServerFile( string ChunkName, string FileContents )
-		{
-			OverwrittenFile File = new OverwrittenFile( ChunkName );
-			File.SetContents( FileContents );
-			SpyglassLauncher.SyringeInstance.CallExport( SpyglassLauncher.DLL_NAME, "AddServerFile", File );
+			SDKInfo Info;
+			Info.Path = Application.StartupPath + "/.processed/";
+			Console.WriteLine( "Path: " + Info.Path );
+			SpyglassLauncher.SyringeInstance?.CallExport( SpyglassLauncher.DLL_NAME, "SetReplacementsPath", Info );
 		}
 
 	}

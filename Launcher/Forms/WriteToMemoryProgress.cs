@@ -28,7 +28,7 @@ namespace Launcher.Forms
 		public void AddModProgress(ModBase Mod)
 		{
 			ModWriteToMemoryHeader Header = new ModWriteToMemoryHeader();
-			Header.Text = Mod.Path;
+			Header.Text = Mod.ModPath;
 			flowLayoutPanel.Controls.Add( Header );
 
 			foreach ( ModFile F in Mod.Files)
