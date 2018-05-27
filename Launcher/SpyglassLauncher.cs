@@ -226,7 +226,7 @@ namespace Launcher
 			TTF2Process = targetProcess;
 			SyringeInstance = syringe;
 
-			SDKInterface.SetReplacementsPath();
+// 			SDKInterface.SetReplacementsPath();
 		}
 
 		// Actions

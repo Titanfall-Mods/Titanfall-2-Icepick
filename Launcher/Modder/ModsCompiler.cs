@@ -10,7 +10,7 @@ namespace Launcher.Modder
 {
 	public static class ModsCompiler
 	{
-		public const string COMPILED_OUTPUT_DIRECTORY = ".processed";
+		public const string COMPILED_OUTPUT_DIRECTORY = ".processed/scripts/vscripts";
 
 		public static void CleanOutputDirectory()
 		{

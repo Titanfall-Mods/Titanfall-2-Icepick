@@ -8,7 +8,7 @@ namespace Launcher.Forms
 	public partial class SpawnlistGenerator : Form
 	{
 		private const string MODELS_FOLDER_NAME = @"\models";
-		private const string OUTPUT_FORMAT = "\nconst array<asset> SpawnList = [\n{0}];";
+		private const string OUTPUT_FORMAT = "\nPrecacheList = [\n{0}];\n\n// #include scripts/spawnlists/sh_spawnlist_loader.nut\n";
 		private const string MODEL_FORMAT = "\t$\"{0}\"{1}\n";
 
 		public SpawnlistGenerator()

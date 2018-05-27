@@ -39,6 +39,7 @@ namespace Launcher.ModDocuments
 		protected const string PROCESSED_FILES_DIR = ".processed";
 		protected const string PREPROCESSOR_REGEX = @"//.*#([a-zA-Z]+) (.*)"; // Preprocessor format: // #include test.nut
 		protected const int PREPROCESSOR_CAPTURES = 2;
+		protected const int MAX_PREPROCESSORS = 256;
 
 		// Preprocessor handlers return true if they are a valid handler, and should require processing the file again after they've been run
 		protected delegate bool ModFilePreprocessorHandler( ModFile TargetFile, int LineIdx, string Data );
@@ -63,25 +64,31 @@ namespace Launcher.ModDocuments
 		private void ReadAndProcessContents()
 		{
 			// Get the file contents we wish to write
-			string ReplacementPath = $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{ReplacementFile}";
-			Contents = File.ReadAllText( ReplacementPath, Encoding.ASCII );
-			Contents = Contents.Replace( Environment.NewLine, "\n" );
-
-			// Append files
-			foreach( string AppendedFile in AppendedFiles )
+			try
 			{
-				string AppendString = File.ReadAllText( $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{AppendedFile}" );
-				Contents += AppendString;
+				string ReplacementPath = $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{ReplacementFile}";
+				Contents = File.ReadAllText( ReplacementPath, Encoding.ASCII );
+				Contents = Contents.Replace( Environment.NewLine, "\n" );
+
+				// Append files
+				foreach ( string AppendedFile in AppendedFiles )
+				{
+					string AppendString = File.ReadAllText( $"{ParentMod.ModPath}{Path.DirectorySeparatorChar}{AppendedFile}" );
+					Contents += AppendString;
+				}
+
+				// Process each line looking for custom preprocessors
+				bool PreprocessingFinished = false;
+				int i = 0;
+				while ( !PreprocessingFinished )
+				{
+					PreprocessingFinished = PreprocessContents();
+					i++;
+					if ( i > MAX_PREPROCESSORS ) break;
+				}
 			}
-
-			// Process each line looking for custom preprocessors
-			bool PreprocessingFinished = false;
-			int i = 0;
-			while ( !PreprocessingFinished )
+			catch(Exception e)
 			{
-				PreprocessingFinished = PreprocessContents();
-				i++;
-				if ( i > 16 ) break;
 			}
 		}
 
@@ -306,7 +313,7 @@ namespace Launcher.ModDocuments
 			string IncludeContents = File.ReadAllText( FilePath );
 
 			// Get lines for the original file
-			string[] ContentLines = TargetFile.Contents.Split( new string[] { Environment.NewLine }, int.MaxValue, StringSplitOptions.None );
+			string[] ContentLines = TargetFile.Contents.Split( new string[] { "\n" }, int.MaxValue, StringSplitOptions.None );
 
 			// Replace the preprocessor
 			if ( InsertInsteadOfReplace )
@@ -325,7 +332,7 @@ namespace Launcher.ModDocuments
 			foreach ( string Line in ContentLines )
 			{
 				Builder.Append( Line );
-				Builder.Append( Environment.NewLine );
+				Builder.Append( "\n" );
 			}
 			TargetFile.Contents = Builder.ToString();
 		}
