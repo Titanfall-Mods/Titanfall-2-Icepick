@@ -13,17 +13,17 @@ namespace Launcher.Modder
 	{
 
 		[StructLayout( LayoutKind.Sequential, Pack = 8 )]
-		struct SDKInfo
+		struct SDKSettings
 		{
-			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string Path;
+			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string BasePath;
 		};
 
-		public static void SetReplacementsPath()
+		public static void Initialise()
 		{
-			SDKInfo Info;
-			Info.Path = Application.StartupPath + "/.processed/";
-			Console.WriteLine( "Path: " + Info.Path );
-			SpyglassLauncher.SyringeInstance?.CallExport( SpyglassLauncher.DLL_NAME, "SetReplacementsPath", Info );
+            SDKSettings Settings = new SDKSettings();
+            Settings.BasePath = Application.StartupPath + "\\data\\";
+			Console.WriteLine( "Path: " + Settings.BasePath);
+			SpyglassLauncher.SyringeInstance?.CallExport( SpyglassLauncher.DLL_NAME, SpyglassLauncher.DLL_FUNC_INIT, Settings );
 		}
 
 	}

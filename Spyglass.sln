@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TitanfallSDK", "TitanfallSDK\TitanfallSDK.vcxproj", "{B355555D-1FEC-4EBF-B486-2C75FCDE2271}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TTF2SDK", "C:\Users\james\OneDrive\Documents\Git\Titanfall-2-SDK\TTF2SDK\TTF2SDK.vcxproj", "{F07D9B2C-F871-495F-95A8-1A266ED9684E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Debug|x64.ActiveCfg = Debug|x64
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Debug|x64.Build.0 = Debug|x64
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Debug|x86.ActiveCfg = Debug|Win32
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Debug|x86.Build.0 = Debug|Win32
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Release|Any CPU.ActiveCfg = Release|Win32
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Release|x64.ActiveCfg = Release|x64
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Release|x64.Build.0 = Release|x64
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Release|x86.ActiveCfg = Release|Win32
-		{B355555D-1FEC-4EBF-B486-2C75FCDE2271}.Release|x86.Build.0 = Release|Win32
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Debug|x64.ActiveCfg = Debug|x64
@@ -41,14 +27,6 @@ Global
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Release|x64.Build.0 = Release|Any CPU
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Release|x86.ActiveCfg = Release|Any CPU
 		{22BBEC76-E9ED-416B-8AAA-B7D3E53545FD}.Release|x86.Build.0 = Release|Any CPU
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Debug|x64.ActiveCfg = Debug|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Debug|x64.Build.0 = Debug|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Debug|x86.ActiveCfg = Debug|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Release|Any CPU.ActiveCfg = Release|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Release|x64.ActiveCfg = Release|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Release|x64.Build.0 = Release|x64
-		{F07D9B2C-F871-495F-95A8-1A266ED9684E}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

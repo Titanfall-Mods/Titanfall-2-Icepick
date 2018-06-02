@@ -55,9 +55,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
-      <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,33 +68,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\InfoProgressBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\ModWriteToMemoryHeader.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ModWriteToMemoryHeader.Designer.cs">
-      <DependentUpon>ModWriteToMemoryHeader.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data.cs" />
     <Compile Include="Forms\LookupGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\LookupGenerator.Designer.cs">
       <DependentUpon>LookupGenerator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\LookupScanner.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LookupScanner.Designer.cs">
-      <DependentUpon>LookupScanner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\FileWriteToMemoryProgress.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\FileWriteToMemoryProgress.Designer.cs">
-      <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SpawnlistGenerator.cs">
       <SubType>Form</SubType>
@@ -105,22 +80,7 @@
     <Compile Include="Forms\SpawnlistGenerator.Designer.cs">
       <DependentUpon>SpawnlistGenerator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WriteToMemoryProgress.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WriteToMemoryProgress.Designer.cs">
-      <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Modder\ConsoleControlWriter.cs" />
-    <Compile Include="Modder\ConsoleFileWatcher.cs" />
-    <Compile Include="Modder\ModsCompiler.cs" />
-    <Compile Include="Modder\MultiConsoleWriter.cs" />
     <Compile Include="Modder\SDKInterface.cs" />
-    <Compile Include="ModDocuments\ModBase.cs" />
-    <Compile Include="ModDocuments\ModFile.cs" />
-    <Compile Include="ModDocuments\ModJson.cs" />
-    <Compile Include="Modder\MemoryModder.cs" />
-    <Compile Include="Modder\MemoryScanner.cs" />
     <Compile Include="SpyglassLauncher.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,23 +97,11 @@
     <Compile Include="Syringe\Win32\Imports.cs" />
     <Compile Include="Syringe\Win32\Structs.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
-    <EmbeddedResource Include="Controls\ModWriteToMemoryHeader.resx">
-      <DependentUpon>ModWriteToMemoryHeader.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LookupGenerator.resx">
       <DependentUpon>LookupGenerator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LookupScanner.resx">
-      <DependentUpon>LookupScanner.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\FileWriteToMemoryProgress.resx">
-      <DependentUpon>FileWriteToMemoryProgress.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SpawnlistGenerator.resx">
       <DependentUpon>SpawnlistGenerator.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WriteToMemoryProgress.resx">
-      <DependentUpon>WriteToMemoryProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpyglassLauncher.resx">
       <DependentUpon>SpyglassLauncher.cs</DependentUpon>
@@ -167,7 +115,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
