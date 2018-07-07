@@ -19,6 +19,8 @@
                     <MenuItem Header="_Open Mods Folder" Click="OpenModsFolder_Click" />
                     <MenuItem Header="_Reload Mods List" Click="ReloadMods_Click" />
                     <Separator/>
+                    <MenuItem Header="Select Game Location" Click="SelectGameLocation_Click" />
+                    <Separator/>
                     <MenuItem Header="_Quit" />
                 </MenuItem>
                 <MenuItem Header="_Help">
@@ -26,6 +28,7 @@
                     <MenuItem Header="Open _Titanfall Mods" Click="OpenTitanfallMods_Click" />
                     <Separator />
                     <MenuItem x:Name="EventLogButton" Header="View Event Log" Click="ViewEventLog_Click" />
+                    <MenuItem Header="Cleanup Registry" Click="CleanupRegistry_Click" />
                     <Separator />
                     <MenuItem Header="Check for _Updates" Click="CheckForUpdates_Click" />
                 </MenuItem>
@@ -36,7 +39,7 @@
             <ScrollViewer x:Name="EventLogViewer" Margin="10,30,10,65" Visibility="Hidden" >
                 <StackPanel x:Name="EventLog"/>
             </ScrollViewer>
-            <Button Content="Launch Game" Height="50" Margin="10,0,10,10" VerticalAlignment="Bottom"/>
+            <Button Content="Launch Game" Height="50" Margin="10,0,10,10" VerticalAlignment="Bottom" Click="LaunchGame_Click"/>
         </Grid>
     </DockPanel>
 </Window>

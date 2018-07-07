@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Icepick.Mods;
+using Microsoft.Win32;
 
 namespace Icepick
 {
@@ -12,6 +13,9 @@ namespace Icepick
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private const string TitanfallExecutableFilter = "Titanfall 2 (Titanfall2.exe)|Titanfall2.exe";
+		private const string TitanfallDefaultInstallDir = @"C:\Program Files (x86)\Origin Games\Titanfall2\";
+
 		List<string> eventHistory;
 
 		public MainWindow()
@@ -122,12 +126,46 @@ namespace Icepick
 			CheckForAllUpdates();
 		}
 
+		private void SelectGameLocation_Click( object sender, RoutedEventArgs e )
+		{
+			ShowSelectGameLocation();
+		}
+
+		private void CleanupRegistry_Click( object sender, RoutedEventArgs e )
+		{
+			Api.IcepickRegistry.ClearRegistry();
+		}
+
+		private void LaunchGame_Click( object sender, RoutedEventArgs e )
+		{
+			string gamePath = Api.IcepickRegistry.ReadGameInstallPath();
+			if ( string.IsNullOrEmpty( gamePath ) )
+			{
+				ShowSelectGameLocation();
+			}
+		}
+
 		private void CheckForAllUpdates()
 		{
 			Api.ApiQueue.ApiRequest( "IcepickInfo" );
 			foreach( TitanfallMod mod in ModDatabase.LoadedMods )
 			{
 				mod.CheckForUpdates();
+			}
+		}
+
+		private void ShowSelectGameLocation()
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.CheckPathExists = true;
+			openFileDialog.Filter = TitanfallExecutableFilter;
+			openFileDialog.InitialDirectory = TitanfallDefaultInstallDir;
+			if ( openFileDialog.ShowDialog() == true )
+			{
+				if( !string.IsNullOrWhiteSpace( openFileDialog.FileName ) )
+				{
+					Api.IcepickRegistry.WriteGameInstallPath( openFileDialog.FileName );
+				}
 			}
 		}
 
