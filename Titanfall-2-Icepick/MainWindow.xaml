@@ -1,0 +1,42 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Icepick"
+        xmlns:Controls="clr-namespace:Icepick.Controls" x:Class="Icepick.MainWindow"
+        mc:Ignorable="d"
+        Title="Titanfall 2 Icepick" Height="480" Width="640" ResizeMode="CanResizeWithGrip">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="lblStatusText" Text="" />
+            </StatusBarItem>
+        </StatusBar>
+        <Grid DockPanel.Dock="Top">
+            <Menu IsMainMenu="True">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open Mods Folder" Click="OpenModsFolder_Click" />
+                    <MenuItem Header="_Reload Mods List" Click="ReloadMods_Click" />
+                    <Separator/>
+                    <MenuItem Header="_Quit" />
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_About" />
+                    <MenuItem Header="Open _Titanfall Mods" Click="OpenTitanfallMods_Click" />
+                    <Separator />
+                    <MenuItem x:Name="EventLogButton" Header="View Event Log" Click="ViewEventLog_Click" />
+                    <Separator />
+                    <MenuItem Header="Check for _Updates" Click="CheckForUpdates_Click" />
+                </MenuItem>
+            </Menu>
+            <ScrollViewer x:Name="ModsViewer" Margin="0,20,0,65" >
+                <StackPanel x:Name="ModsPanel"/>
+            </ScrollViewer>
+            <ScrollViewer x:Name="EventLogViewer" Margin="10,30,10,65" Visibility="Hidden" >
+                <StackPanel x:Name="EventLog"/>
+            </ScrollViewer>
+            <Button Content="Launch Game" Height="50" Margin="10,0,10,10" VerticalAlignment="Bottom"/>
+        </Grid>
+    </DockPanel>
+</Window>
