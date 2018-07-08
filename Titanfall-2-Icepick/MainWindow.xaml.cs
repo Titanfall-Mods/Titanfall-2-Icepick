@@ -27,6 +27,11 @@ namespace Icepick
 			Api.ApiQueue.OnApiRequestIssued += ApiQueue_OnApiRequestIssued;
 			Api.ApiQueue.OnApiRequestResult += ApiQueue_OnApiRequestResult;
 
+			SDKInjector.OnLaunchingProcess += SDKInjector_OnLaunchingProcess;
+			SDKInjector.OnInjectingIntoProcess += SDKInjector_OnInjectingIntoProcess;
+			SDKInjector.OnInjectionComplete += SDKInjector_OnInjectionComplete;
+			SDKInjector.OnInjectionException += SDKInjector_OnInjectionException;
+
 			ModDatabase.OnStartedLoadingMods += ModDatabase_OnStartedLoadingMods;
 			ModDatabase.OnFinishedLoadingMods += ModDatabase_OnFinishedLoadingMods;
 			ModDatabase.OnModLoaded += ModDatabase_OnModLoaded;
@@ -65,6 +70,26 @@ namespace Icepick
 				}
 				
 			}
+		}
+
+		private void SDKInjector_OnLaunchingProcess( string message )
+		{
+			AddEvent( "Launching Titanfall 2 and waiting for injection..." );
+		}
+
+		private void SDKInjector_OnInjectingIntoProcess( string message )
+		{
+			AddEvent( "Injecting into Titanfall 2 process..." );
+		}
+
+		private void SDKInjector_OnInjectionComplete( string message )
+		{
+			AddEvent( "Succesfully injected into Titanfall 2!" );
+		}
+
+		private void SDKInjector_OnInjectionException( string message )
+		{
+			AddEvent( "An exception occurred while injecting! " + message );
 		}
 
 		private void ModDatabase_OnStartedLoadingMods()
@@ -150,8 +175,7 @@ namespace Icepick
 				return;
 			}
 
-			AddEvent( "Launching Titanfall 2 and waiting for injection..." );
-			Process.Start( new ProcessStartInfo( gamePath ) );
+			SDKInjector.LaunchAndInject( gamePath );
 		}
 
 		private void CheckForAllUpdates()
