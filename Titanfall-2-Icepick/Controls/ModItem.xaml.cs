@@ -59,7 +59,7 @@ namespace Icepick.Controls
 			ModDescription = mod.Definition?.Description;
 			if ( !string.IsNullOrEmpty( mod.ImagePath ) )
 			{
-				ModImageSource = System.IO.Path.Combine( Environment.CurrentDirectory, mod.ImagePath );
+				ModImage = System.IO.Path.Combine( Environment.CurrentDirectory, mod.ImagePath );
 			}
 
 			Mod_OnStatusUpdated();
@@ -71,7 +71,11 @@ namespace Icepick.Controls
 		{
 			set
 			{
-				ModNameLabel.Content = string.IsNullOrWhiteSpace(value) ? "Warning: Unnamed Mod" : value;
+				ModNameLabel.Content = string.IsNullOrWhiteSpace(value) ? "Warning: Unnamed Mod " + System.IO.Path.GetFileName( Mod.Directory ) : value;
+			}
+			get
+			{
+				return (string) ModNameLabel.Content;
 			}
 		}
 
@@ -81,13 +85,25 @@ namespace Icepick.Controls
 			{
 				ModDescriptionLabel.Content = string.IsNullOrWhiteSpace( value ) ? "Warning: Missing description." : value;
 			}
+			get
+			{
+				return (string) ModDescriptionLabel.Content;
+			}
 		}
 
-		public string ModImageSource
+		public string ModImage
 		{
 			set
 			{
 				ModDisplayImage.Source = new BitmapImage( new Uri( value ) );
+			}
+		}
+
+		public ImageSource ModImageSource
+		{
+			get
+			{
+				return ModDisplayImage.Source;
 			}
 		}
 
@@ -117,6 +133,12 @@ namespace Icepick.Controls
 		private void CheckForUpdates_Click( object sender, RoutedEventArgs e )
 		{
 			Mod.CheckForUpdates();
+		}
+
+		private void ViewDetails_Click( object sender, RoutedEventArgs e )
+		{
+			ModDetailsWindow details = new ModDetailsWindow( this );
+			details.Show();
 		}
 
 		private void Mod_OnStatusUpdated()
@@ -163,6 +185,8 @@ namespace Icepick.Controls
 
 		private void UpdateDisabledOptions()
 		{
+			ViewDetailsMenuItem.IsEnabled = Mod.Definition != null;
+
 			bool hasApiId = Mod.Definition != null && !string.IsNullOrWhiteSpace( Mod.Definition.ApiId );
 			ShowOnSiteMenuItem.IsEnabled = hasApiId;
 			CheckForUpdatesMenuItem.IsEnabled = hasApiId;

@@ -1,0 +1,19 @@
+﻿<Window x:Class="Icepick.Controls.ModDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Icepick.Controls"
+        mc:Ignorable="d"
+        Title="ModDetailsWindow" Height="400" Width="600" ResizeMode="CanResizeWithGrip" >
+    <Grid>
+        <ScrollViewer Padding="10" CanContentScroll="True" HorizontalScrollBarVisibility="Auto" >
+            <Grid>
+                <Label x:Name="ModNameLabel" Content="Unnamed Mod" VerticalAlignment="Top" FontWeight="Bold" Margin="55,0,0,0" FontSize="14"/>
+                <Label x:Name="ModDescriptionLabel" Content="Mod Description." VerticalAlignment="Top" Margin="55,20,0,0" FontStyle="Italic"/>
+                <Image x:Name="ModDisplayImage" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="/Titanfall-2-Icepick;component/Images/icepick-logo.png" Margin="10,6,0,0"/>
+                <StackPanel x:Name="DetailsPanel" Margin="0,51,0,0"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

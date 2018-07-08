@@ -17,7 +17,7 @@ namespace Icepick.Mods
 		public string Description;
 		public List<string> Authors;
 		public List<string> Contacts;
-		public float Version;
+		public string Version;
 		public List<ModdedFile> Files;
 
 	}
