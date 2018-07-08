@@ -37,10 +37,14 @@ namespace Icepick.Mods
 				foreach ( var ModPath in Directory.GetDirectories( MODS_DIRECTORY ) )
 				{
 					TitanfallMod newMod = new TitanfallMod( ModPath );
-					LoadedMods.Add( newMod );
-					if ( OnModLoaded != null )
+					string modDirectory = System.IO.Path.GetFileName( newMod.Directory );
+					if ( !modDirectory.StartsWith( "." ) )
 					{
-						OnModLoaded( newMod );
+						LoadedMods.Add( newMod );
+						if ( OnModLoaded != null )
+						{
+							OnModLoaded( newMod );
+						}
 					}
 				}
 			}
