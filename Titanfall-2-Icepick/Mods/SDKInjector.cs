@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Icepick.Mods
 {
@@ -77,6 +78,14 @@ namespace Icepick.Mods
 
 				await Task.Delay( 1000 );
 			}
+
+			// Will only reach here if injection doesn't occur within the timeout period, so log an event and show a popup
+			string timeoutError = string.Format( "Timed out after {0} seconds. Could not find Titanfall 2 process.", InjectionTimeout );
+			if ( OnInjectionException != null )
+			{
+				OnInjectionException( timeoutError );
+			}
+			MessageBox.Show( timeoutError, "Injection Failed", MessageBoxButton.OK, MessageBoxImage.Exclamation );
 		}
 		
 		protected static void InjectSDK( Process targetProcess )
