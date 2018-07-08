@@ -138,11 +138,20 @@ namespace Icepick
 
 		private void LaunchGame_Click( object sender, RoutedEventArgs e )
 		{
-			string gamePath = Api.IcepickRegistry.ReadGameInstallPath();
+			string gamePath = Api.IcepickRegistry.AttemptReadRespawnRegistryPath() ?? Api.IcepickRegistry.ReadGameInstallPath();
 			if ( string.IsNullOrEmpty( gamePath ) )
 			{
 				ShowSelectGameLocation();
+				gamePath = Api.IcepickRegistry.ReadGameInstallPath();
 			}
+			if ( string.IsNullOrEmpty( gamePath ) )
+			{
+				MessageBox.Show( "You must specify the path to your Titanfall 2 installation before you can use the Icepick.", "Error" );
+				return;
+			}
+
+			AddEvent( "Launching Titanfall 2 and waiting for injection..." );
+			Process.Start( new ProcessStartInfo( gamePath ) );
 		}
 
 		private void CheckForAllUpdates()
