@@ -146,6 +146,12 @@ namespace Icepick
 			ModDatabase.LoadAll();
 		}
 
+		private void About_Click( object sender, RoutedEventArgs e )
+		{
+			Controls.AboutIcepick about = new Controls.AboutIcepick();
+			about.Show();
+		}
+
 		private void CheckForUpdates_Click( object sender, RoutedEventArgs e )
 		{
 			CheckForAllUpdates();

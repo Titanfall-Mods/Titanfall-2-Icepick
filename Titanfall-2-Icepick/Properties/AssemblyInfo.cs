@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Titanfall-2-Icepick" )]
-[assembly: AssemblyDescription( "" )]
+[assembly: AssemblyTitle( "Titanfall 2 Icepick" )]
+[assembly: AssemblyDescription( "Injects the TTF2SDK into Titanfall 2 upon launch. You can contact us at titanfall@jameswilko.com." )]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
 [assembly: AssemblyProduct( "Titanfall-2-Icepick" )]
-[assembly: AssemblyCopyright( "Copyright ©  2018" )]
+[assembly: AssemblyCopyright( "Copyright © 2018 Titanfall Mods" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
