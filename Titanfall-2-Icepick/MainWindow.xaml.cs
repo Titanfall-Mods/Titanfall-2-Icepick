@@ -35,6 +35,7 @@ namespace Icepick
 			ModDatabase.OnStartedLoadingMods += ModDatabase_OnStartedLoadingMods;
 			ModDatabase.OnFinishedLoadingMods += ModDatabase_OnFinishedLoadingMods;
 			ModDatabase.OnModLoaded += ModDatabase_OnModLoaded;
+			ModDatabase.OnFinishedImportingMod += ModDatabase_OnFinishedImportingMod;
 			ModDatabase.LoadAll();
 		}
 
@@ -120,6 +121,19 @@ namespace Icepick
 			ModsPanel.Children.Add( new Controls.ModItem( mod ) );
 		}
 
+		private void ModDatabase_OnFinishedImportingMod( bool success, string message )
+		{
+			if( success )
+			{
+				AddEvent( $"Successfully imported mod!" );
+				ReloadModsList();
+			}
+			else
+			{
+				AddEvent( $"Failed to import mod, {message}" );
+			}
+		}
+
 		private void OpenTitanfallMods_Click( object sender, RoutedEventArgs e)
 		{
 			Process.Start( Api.ApiRoutes.GetSite() );
@@ -147,15 +161,13 @@ namespace Icepick
 
 		private void OpenModsFolder_Click( object sender, RoutedEventArgs e )
 		{
-			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.MODS_DIRECTORY );
+			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.ModsDirectory );
 			Process.Start( path );
 		}
 
 		private void ReloadMods_Click( object sender, RoutedEventArgs e )
 		{
-			ModsPanel.Children.Clear();
-			ModDatabase.ClearDatabase();
-			ModDatabase.LoadAll();
+			ReloadModsList();
 		}
 
 		private void About_Click( object sender, RoutedEventArgs e )
@@ -194,6 +206,26 @@ namespace Icepick
 			}
 
 			SDKInjector.LaunchAndInject( gamePath );
+		}
+
+		private void Icepick_Drop( object sender, DragEventArgs e )
+		{
+			if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
+			{
+				string[] files = (string[]) e.Data.GetData( DataFormats.FileDrop );
+				foreach( string file in files )
+				{
+					AddEvent( $"Attempting to import potential mod: {file}" );
+					ModDatabase.AttemptImportMod( file );
+				}
+			}
+		}
+
+		private void ReloadModsList()
+		{
+			ModsPanel.Children.Clear();
+			ModDatabase.ClearDatabase();
+			ModDatabase.LoadAll();
 		}
 
 		private void CheckForAllUpdates()

@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Icepick.Mods
 {
 	public static class ModDatabase
 	{
-		public const string MODS_DIRECTORY = "data/mods";
+		public const string ModsDirectory = "data/mods";
+		private const string ArchiveExtension = ".zip";
 
 		public delegate void ModDatabaseDelegate();
 		public delegate void TitanfallModDelegate( TitanfallMod Mod );
+		public delegate void ImportModDelegate( bool success, string message );
 
 		public static event ModDatabaseDelegate OnStartedLoadingMods;
 		public static event TitanfallModDelegate OnModLoaded;
 		public static event ModDatabaseDelegate OnFinishedLoadingMods;
+		public static event ImportModDelegate OnFinishedImportingMod;
 
 		public static List<TitanfallMod> LoadedMods = new List<TitanfallMod>();
 
@@ -32,9 +37,9 @@ namespace Icepick.Mods
 				OnStartedLoadingMods();
 			}
 
-			if ( Directory.Exists( MODS_DIRECTORY ) )
+			if ( Directory.Exists( ModsDirectory ) )
 			{
-				foreach ( var ModPath in Directory.GetDirectories( MODS_DIRECTORY ) )
+				foreach ( var ModPath in Directory.GetDirectories( ModsDirectory ) )
 				{
 					TitanfallMod newMod = new TitanfallMod( ModPath );
 					string modDirectory = System.IO.Path.GetFileName( newMod.Directory );
@@ -54,5 +59,53 @@ namespace Icepick.Mods
 				OnFinishedLoadingMods();
 			}
 		}
+
+		public static void AttemptImportMod( string path )
+		{
+			if ( Path.GetExtension( path ) == ArchiveExtension )
+			{
+				string modsFullDirectory = Path.Combine( Environment.CurrentDirectory, ModsDirectory );
+				Console.WriteLine( modsFullDirectory );
+
+				// Check if a mod already exists
+				string modFolderName = Path.GetFileNameWithoutExtension( path );
+				string destinationFolder = Path.Combine( modsFullDirectory, modFolderName );
+				if( Directory.Exists( destinationFolder ) )
+				{
+					MessageBoxResult overwriteResult = MessageBox.Show( $"'{modFolderName}' already exists in your mods folder.\n\nDo you wish to overwrite it?", "Overwrite Mod?", MessageBoxButton.YesNo );
+					if( overwriteResult == MessageBoxResult.Yes )
+					{
+						Directory.Delete( destinationFolder, true );
+					}
+					else
+					{
+						if ( OnFinishedImportingMod != null )
+						{
+							OnFinishedImportingMod( false, $"A mod already exists in folder '{modFolderName}'!" );
+						}
+						return;
+					}
+				}
+
+				try
+				{
+					ZipFile.ExtractToDirectory( path, modsFullDirectory );
+				}
+				catch( Exception e )
+				{
+					if ( OnFinishedImportingMod != null )
+					{
+						OnFinishedImportingMod( false, $"An exception occurred while importing mod '{modFolderName}', {e.Message}" );
+					}
+					return;
+				}
+
+				if ( OnFinishedImportingMod != null )
+				{
+					OnFinishedImportingMod( true, $"{modFolderName} imported successfully!" );
+				}
+			}
+		}
+
 	}
 }

@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:Icepick"
         xmlns:Controls="clr-namespace:Icepick.Controls" x:Class="Icepick.MainWindow"
         mc:Ignorable="d"
-        Title="Titanfall 2 Icepick" Height="480" Width="640" ResizeMode="CanResizeWithGrip">
+        Title="Titanfall 2 Icepick" Height="480" Width="640" ResizeMode="CanResizeWithGrip"
+        AllowDrop="True" Drop="Icepick_Drop"
+    >
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
