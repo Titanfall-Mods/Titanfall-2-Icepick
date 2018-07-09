@@ -25,6 +25,12 @@ namespace Icepick.Mods
 
 		public static List<TitanfallMod> LoadedMods = new List<TitanfallMod>();
 
+		public static void ShowModsFolder()
+		{
+			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.ModsDirectory );
+			System.Diagnostics.Process.Start( path );
+		}
+
 		public static void ClearDatabase()
 		{
 			LoadedMods.Clear();
@@ -89,7 +95,7 @@ namespace Icepick.Mods
 
 				try
 				{
-					ZipFile.ExtractToDirectory( path, modsFullDirectory );
+					ZipFile.ExtractToDirectory( path, destinationFolder );
 				}
 				catch( Exception e )
 				{
@@ -105,6 +111,24 @@ namespace Icepick.Mods
 					OnFinishedImportingMod( true, $"{modFolderName} imported successfully!" );
 				}
 			}
+		}
+
+		public static string PackageMod( string path )
+		{
+			string exportPath = Path.Combine( Environment.CurrentDirectory, ModsDirectory, Path.GetFileName( path ) ) + ArchiveExtension;
+			string modDirectory = Path.Combine( Environment.CurrentDirectory, path );
+			string errorMessage = null;
+
+			try
+			{
+				ZipFile.CreateFromDirectory( modDirectory, exportPath );
+			}
+			catch( Exception e )
+			{
+				errorMessage = e.Message;
+			}
+
+			return errorMessage;
 		}
 
 	}

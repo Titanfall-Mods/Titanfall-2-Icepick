@@ -161,8 +161,7 @@ namespace Icepick
 
 		private void OpenModsFolder_Click( object sender, RoutedEventArgs e )
 		{
-			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.ModsDirectory );
-			Process.Start( path );
+			ModDatabase.ShowModsFolder();
 		}
 
 		private void ReloadMods_Click( object sender, RoutedEventArgs e )
@@ -201,7 +200,7 @@ namespace Icepick
 			}
 			if ( string.IsNullOrEmpty( gamePath ) )
 			{
-				MessageBox.Show( "You must specify the path to your Titanfall 2 installation before you can use the Icepick.", "Error" );
+				MessageBox.Show( "You must specify the path to your Titanfall 2 installation before you can use the Icepick.", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation );
 				return;
 			}
 
@@ -263,7 +262,7 @@ namespace Icepick
 			}
 
 			// Show a popup too to nudge people to download it more
-			MessageBoxResult result = MessageBox.Show( "An update to the Icepick is available! It is highly recommend you download this update as soon as possible.\n\nDo you wish to go to the download page now?", "Icepick Update Available", MessageBoxButton.YesNo );
+			MessageBoxResult result = MessageBox.Show( "An update to the Icepick is available! It is highly recommend you download this update as soon as possible.\n\nDo you wish to go to the download page now?", "Icepick Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information );
 			if( result == MessageBoxResult.Yes )
 			{
 				foreach ( TitanfallMod mod in ModDatabase.LoadedMods )

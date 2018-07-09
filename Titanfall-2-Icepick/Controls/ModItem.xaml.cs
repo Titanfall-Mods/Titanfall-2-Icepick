@@ -141,6 +141,19 @@ namespace Icepick.Controls
 			details.Show();
 		}
 
+		private void PackageMod_Click( object sender, RoutedEventArgs e )
+		{
+			string errorMessage = Mods.ModDatabase.PackageMod( Mod.Directory );
+			if ( errorMessage == null )
+			{
+				Mods.ModDatabase.ShowModsFolder();
+			}
+			else
+			{
+				MessageBox.Show( $"Could not package mod.\n{errorMessage}", "Package Error", MessageBoxButton.OK, MessageBoxImage.Exclamation );
+			}
+		}
+
 		private void Mod_OnStatusUpdated()
 		{
 			UpdateTooltipAndStatus();
