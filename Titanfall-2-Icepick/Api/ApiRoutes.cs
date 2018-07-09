@@ -18,6 +18,7 @@ namespace Icepick.Api
 		private const string AllModReleases = "{0}/mods/releases/all/{1}";
 
 		private const string ViewMod = "{0}/mods/{1}";
+		private const string DownloadIcepick = "{0}/icepick";
 
 		public static string GetSite()
 		{

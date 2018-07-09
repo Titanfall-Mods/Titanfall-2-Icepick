@@ -11,9 +11,10 @@ namespace Icepick.Mods
 {
 	public class TitanfallMod
 	{
-		const string MOD_DOCUMENT = "mod.json";
-		const string MOD_IMAGE = "mod.png";
-		const string RELEASE_FILE = "release.txt";
+		const string ModDocumentFile = "mod.json";
+		const string ModImage = "mod.png";
+		const string ReleaseFile = "release.txt";
+		const string IcepickApiId = "icepick";
 
 		public TitanfallModDefinition Definition;
 		public string CurrentReleaseId;
@@ -26,7 +27,7 @@ namespace Icepick.Mods
 
 		public TitanfallMod( string Directory )
 		{
-			string modDocumentPath = Path.Combine( Directory, MOD_DOCUMENT );
+			string modDocumentPath = Path.Combine( Directory, ModDocumentFile );
 			if ( File.Exists( modDocumentPath ) )
 			{
 				StreamReader reader = new StreamReader( modDocumentPath );
@@ -39,14 +40,14 @@ namespace Icepick.Mods
 			this.Directory = Directory;
 
 			// Load custom image for this mod if it exists
-			string modImagePath = Path.Combine( Directory, MOD_IMAGE );
+			string modImagePath = Path.Combine( Directory, ModImage );
 			if ( File.Exists( modImagePath ) )
 			{
 				ImagePath = modImagePath;
 			}
 
 			// Get the release id of the mod so we can check it for updates
-			string modReleasePath = Path.Combine( Directory, RELEASE_FILE );
+			string modReleasePath = Path.Combine( Directory, ReleaseFile );
 			if ( File.Exists( modReleasePath ) )
 			{
 				StreamReader reader = new StreamReader( modReleasePath );
@@ -61,22 +62,37 @@ namespace Icepick.Mods
 			}
 		}
 
+		public bool IsIcepickFramework
+		{
+			get
+			{
+				return Definition != null && !string.IsNullOrWhiteSpace( Definition.ApiId ) && Definition.ApiId == IcepickApiId;
+			}
+		}
+
 		public async void CheckForUpdates()
 		{
 			if ( Definition != null && !string.IsNullOrWhiteSpace( Definition.ApiId ) )
 			{
-				Task<Api.ApiResult> requestTask = Api.ApiQueue.ApiRequest( "LatestModRelease", Definition.ApiId );
-				await requestTask;
-
-				Api.ApiResult results = requestTask.Result;
-				if( results != null && results.data != null )
+				if ( IsIcepickFramework )
 				{
-					string latestReleaseId = null;
-					results.data.TryGetValue( "_id", out latestReleaseId );
-					RequiresUpdate = latestReleaseId != null && latestReleaseId != CurrentReleaseId;
-					if ( OnStatusUpdated != null )
+					Api.ApiQueue.ApiRequest( "IcepickInfo" );
+				}
+				else
+				{ 
+					Task<Api.ApiResult> requestTask = Api.ApiQueue.ApiRequest( "LatestModRelease", Definition.ApiId );
+					await requestTask;
+
+					Api.ApiResult results = requestTask.Result;
+					if ( results != null && results.data != null )
 					{
-						OnStatusUpdated();
+						string latestReleaseId = null;
+						results.data.TryGetValue( "_id", out latestReleaseId );
+						RequiresUpdate = latestReleaseId != null && latestReleaseId != CurrentReleaseId;
+						if ( OnStatusUpdated != null )
+						{
+							OnStatusUpdated();
+						}
 					}
 				}
 			}
@@ -84,7 +100,11 @@ namespace Icepick.Mods
 
 		public void OpenDownloadPage()
 		{
-			if ( Definition != null && !string.IsNullOrWhiteSpace( Definition.ApiId ) )
+			if( IsIcepickFramework )
+			{
+				Process.Start( Api.ApiRoutes.GetRoute( "DownloadIcepick" ) );
+			}
+			else if ( Definition != null && !string.IsNullOrWhiteSpace( Definition.ApiId ) )
 			{
 				Process.Start( Api.ApiRoutes.GetRoute( "ViewMod", Definition.ApiId ) );
 			}
@@ -133,6 +153,15 @@ namespace Icepick.Mods
 				}
 			}
 			return errors;
+		}
+
+		public void IcepickUpdateAvailable()
+		{
+			RequiresUpdate = true;
+			if ( OnStatusUpdated != null )
+			{
+				OnStatusUpdated();
+			}
 		}
 
 	}

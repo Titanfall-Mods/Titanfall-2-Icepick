@@ -57,6 +57,18 @@ namespace Icepick
 			if( success )
 			{
 				AddEvent( $"Api request to {apiPath} succeeded! {result.rawData}", true );
+
+				if( apiPath == Api.ApiRoutes.GetApiRoute( "IcepickInfo" ) )
+				{
+					string latestIcepickId = null;
+					if( result.data.TryGetValue( "_id", out latestIcepickId ) )
+					{
+						if( latestIcepickId != Icepick.Version.Current )
+						{
+							OnIcepickUpdateAvailable();
+						}
+					}
+				}
 			}
 			else
 			{
@@ -186,7 +198,6 @@ namespace Icepick
 
 		private void CheckForAllUpdates()
 		{
-			Api.ApiQueue.ApiRequest( "IcepickInfo" );
 			foreach( TitanfallMod mod in ModDatabase.LoadedMods )
 			{
 				mod.CheckForUpdates();
@@ -204,6 +215,31 @@ namespace Icepick
 				if( !string.IsNullOrWhiteSpace( openFileDialog.FileName ) )
 				{
 					Api.IcepickRegistry.WriteGameInstallPath( openFileDialog.FileName );
+				}
+			}
+		}
+
+		private void OnIcepickUpdateAvailable()
+		{
+			// Show update on the Icepick framework mod
+			foreach ( TitanfallMod mod in ModDatabase.LoadedMods )
+			{
+				if( mod.IsIcepickFramework )
+				{
+					mod.IcepickUpdateAvailable();
+				}
+			}
+
+			// Show a popup too to nudge people to download it more
+			MessageBoxResult result = MessageBox.Show( "An update to the Icepick is available! It is highly recommend you download this update as soon as possible.\n\nDo you wish to go to the download page now?", "Icepick Update Available", MessageBoxButton.YesNo );
+			if( result == MessageBoxResult.Yes )
+			{
+				foreach ( TitanfallMod mod in ModDatabase.LoadedMods )
+				{
+					if ( mod.IsIcepickFramework )
+					{
+						mod.OpenDownloadPage();
+					}
 				}
 			}
 		}

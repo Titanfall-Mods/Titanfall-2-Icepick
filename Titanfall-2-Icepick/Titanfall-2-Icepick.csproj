@@ -114,6 +114,7 @@
     <Compile Include="Syringe\Win32\Enums.cs" />
     <Compile Include="Syringe\Win32\Imports.cs" />
     <Compile Include="Syringe\Win32\Structs.cs" />
+    <Compile Include="Version.cs" />
     <Page Include="Controls\ModDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
