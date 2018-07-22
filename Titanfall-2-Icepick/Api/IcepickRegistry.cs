@@ -44,11 +44,11 @@ namespace Icepick.Api
 
 		public static void ClearRegistry()
 		{
-			RegistryKey key = Registry.LocalMachine.OpenSubKey( RegistrySubKey );
+			RegistryKey key = Registry.CurrentUser.OpenSubKey( RegistrySubKey );
 			if ( key != null )
 			{
 				key.Close();
-				Registry.LocalMachine.DeleteSubKey( RegistrySubKey );
+				Registry.CurrentUser.DeleteSubKey( RegistrySubKey );
 			}
 		}
 
