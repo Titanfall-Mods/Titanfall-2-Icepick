@@ -24,6 +24,10 @@ namespace Icepick
 
 			eventHistory = new List<string>();
 
+			btnDisableCrashReports.DataContext = new CrashReporting.Settings();
+			CrashReporting.CrashReporter.StartWatching();
+			CrashReporting.CrashReporter.OnCrashDumpProcessed += CrashReporter_OnDumpProcessed;
+
 			Api.ApiQueue.OnApiRequestIssued += ApiQueue_OnApiRequestIssued;
 			Api.ApiQueue.OnApiRequestResult += ApiQueue_OnApiRequestResult;
 
@@ -47,6 +51,18 @@ namespace Icepick
 				lblStatusText.Text = eventDescription;
 			}
 		}
+
+        private void CrashReporter_OnDumpProcessed( bool success, string name )
+        {
+            if (success)
+            {
+                AddEvent($"Crash report {name} submitted successfully", true);
+            }
+            else
+            {
+                AddEvent($"Failed to upload crash report {name}", true);
+            }
+        }
 
 		private void ApiQueue_OnApiRequestIssued( string apiPath )
 		{
