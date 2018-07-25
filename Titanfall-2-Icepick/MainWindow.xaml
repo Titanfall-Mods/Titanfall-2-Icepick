@@ -24,9 +24,11 @@
                     <Separator/>
                     <MenuItem Header="Select _Game Location" Click="SelectGameLocation_Click" />
                     <Separator/>
-                    <MenuItem x:Name="btnDisableCrashReports" Header="Disable _Crash Reports" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsDisabled}"/>
-                    <Separator/>
                     <MenuItem Header="_Quit" />
+                </MenuItem>
+                <MenuItem Header="_Settings">
+                    <MenuItem x:Name="btnDisableCrashReports" Header="Disable _Crash Reports" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding CrashReportingDisabled}"/>
+                    <MenuItem x:Name="btnEnableDeveloperMode" Header="Enable _Developer Mode" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding DeveloperModeEnabled}"/>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About" Click="About_Click" />

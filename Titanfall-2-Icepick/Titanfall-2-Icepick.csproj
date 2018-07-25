@@ -108,7 +108,7 @@
       <DependentUpon>ModDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="CrashReporting\CrashReporter.cs" />
-    <Compile Include="CrashReporting\Settings.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Mods\SDKInjector.cs" />
     <Compile Include="Syringe\CustomMarshal.cs" />

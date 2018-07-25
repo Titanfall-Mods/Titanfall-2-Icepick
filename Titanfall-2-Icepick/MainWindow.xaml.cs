@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,14 +18,18 @@ namespace Icepick
 		private const string TitanfallDefaultInstallDir = @"C:\Program Files (x86)\Origin Games\Titanfall2\";
 
 		List<string> eventHistory;
+		Settings settings;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
 			eventHistory = new List<string>();
+			settings = new Settings();
 
-			btnDisableCrashReports.DataContext = new CrashReporting.Settings();
+			btnDisableCrashReports.DataContext = settings;
+			btnEnableDeveloperMode.DataContext = settings;
+
 			CrashReporting.CrashReporter.StartWatching();
 			CrashReporting.CrashReporter.OnCrashDumpProcessed += CrashReporter_OnDumpProcessed;
 

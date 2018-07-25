@@ -15,6 +15,7 @@ namespace Icepick.Mods
 		struct SDKSettings
 		{
 			[CustomMarshalAs( CustomUnmanagedType.LPStr )] public string BasePath;
+			public bool DeveloperMode;
 		};
 
 		private const float InjectionTimeout = 30;
@@ -101,6 +102,7 @@ namespace Icepick.Mods
 
 			SDKSettings settings = new SDKSettings();
 			settings.BasePath = AppDomain.CurrentDomain.BaseDirectory + SDKDataPath;
+			settings.DeveloperMode = Api.IcepickRegistry.ReadEnableDeveloperMode();
 			syringe.CallExport( SDKDllName, InitializeFunction, settings );
 
 			if( OnInjectionComplete != null )

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Icepick.CrashReporting
+namespace Icepick
 {
 	class Settings : INotifyPropertyChanged
 	{
@@ -19,7 +19,7 @@ namespace Icepick.CrashReporting
 			}
 		}
 
-		public bool IsDisabled
+		public bool CrashReportingDisabled
 		{
 			get
 			{
@@ -28,7 +28,20 @@ namespace Icepick.CrashReporting
 			set
 			{
 				Api.IcepickRegistry.WriteDisableCrashReports(value);
-				Notify("IsDisabled");
+				Notify("CrashReportingDisabled");
+			}
+		}
+
+		public bool DeveloperModeEnabled
+		{
+			get
+			{
+				return Api.IcepickRegistry.ReadEnableDeveloperMode();
+			}
+			set
+			{
+				Api.IcepickRegistry.WriteEnableDeveloperMode(value);
+				Notify("DeveloperModeEnabled");
 			}
 		}
 	}

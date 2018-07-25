@@ -12,6 +12,7 @@ namespace Icepick.Api
 		private const string RegistrySubKey = @"SOFTWARE\TitanfallIcepick";
 		private const string GameLocationKey = "InstallPath";
 		private const string DisableCrashReportsKey = "DisableCrashReports";
+		private const string EnableDeveloperModeKey = "EnableDeveloperMode";
 		private const string MachineUUIDKey = "MachineUUID";
 
 		private const string RespawnRegistrySubKey = @"SOFTWARE\WOW6432Node\Respawn\Titanfall2";
@@ -70,6 +71,16 @@ namespace Icepick.Api
 		public static bool ReadDisableCrashReports()
 		{
 			return ReadValue<int>( DisableCrashReportsKey ) == 1 ? true : false;
+		}
+
+		public static void WriteEnableDeveloperMode(bool enableDeveloperMode)
+		{
+			WriteValue(EnableDeveloperModeKey, enableDeveloperMode ? 1 : 0);
+		}
+
+		public static bool ReadEnableDeveloperMode()
+		{
+			return ReadValue<int>(EnableDeveloperModeKey) == 1 ? true : false;
 		}
 
 		public static void WriteMachineUUID( string uuid )
