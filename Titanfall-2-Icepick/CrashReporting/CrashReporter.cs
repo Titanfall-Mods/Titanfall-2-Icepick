@@ -22,8 +22,14 @@ namespace Icepick.CrashReporting
 
 		public static void StartWatching()
 		{
+			string crashDumpsPath = Path.Combine( Environment.CurrentDirectory, "data", "crash_dumps" );
+			if( !Directory.Exists( crashDumpsPath ) )
+			{
+				Directory.CreateDirectory( crashDumpsPath );
+			}
+
 			_watcher = new FileSystemWatcher();
-			_watcher.Path = Path.Combine(Environment.CurrentDirectory, "data", "crash_dumps");
+			_watcher.Path = crashDumpsPath;
 			_watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime | NotifyFilters.FileName;
 			_watcher.Filter = "*.dmp";
 			_watcher.Created += new FileSystemEventHandler(OnDumpCreated);

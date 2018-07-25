@@ -19,7 +19,7 @@ namespace Icepick.Mods
 
 		private const float InjectionTimeout = 30;
 		private const string OriginProcessName = "Origin";
-		private const string SDKDllName = "TTF2SDK.dll";
+		public const string SDKDllName = "TTF2SDK.dll";
 		private const string SDKDataPath = @"data\";
 		private const string InitializeFunction = "InitialiseSDK";
 
