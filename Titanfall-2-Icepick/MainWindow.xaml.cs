@@ -121,12 +121,18 @@ namespace Icepick
 			ModsPanel.Children.Add( new Controls.ModItem( mod ) );
 		}
 
-		private void ModDatabase_OnFinishedImportingMod( bool success, string message )
+		private void ModDatabase_OnFinishedImportingMod( bool success, ModDatabase.ModImportType importType, string message )
 		{
 			if( success )
 			{
-				AddEvent( $"Successfully imported mod!" );
-				ReloadModsList();
+				AddEvent( $"Successfully imported mod! {message}" );
+
+				switch ( importType )
+				{
+					case ModDatabase.ModImportType.Mod:
+						ReloadModsList();
+						break;
+				}
 			}
 			else
 			{
@@ -162,6 +168,11 @@ namespace Icepick
 		private void OpenModsFolder_Click( object sender, RoutedEventArgs e )
 		{
 			ModDatabase.ShowModsFolder();
+		}
+
+		private void OpenSavesFolder_Click( object sender, RoutedEventArgs e )
+		{
+			ModDatabase.ShowSavesFolder();
 		}
 
 		private void ReloadMods_Click( object sender, RoutedEventArgs e )

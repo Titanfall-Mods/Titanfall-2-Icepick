@@ -11,7 +11,7 @@ namespace Icepick.Mods
 {
 	public class TitanfallMod
 	{
-		const string ModDocumentFile = "mod.json";
+		public const string ModDocumentFile = "mod.json";
 		const string ModImage = "mod.png";
 		const string ReleaseFile = "release.txt";
 		const string IcepickApiId = "icepick";

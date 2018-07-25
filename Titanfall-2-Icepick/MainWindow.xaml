@@ -18,7 +18,8 @@
         <Grid DockPanel.Dock="Top">
             <Menu IsMainMenu="True">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open Mods Folder" Click="OpenModsFolder_Click" />
+                    <MenuItem Header="Open _Mods Folder" Click="OpenModsFolder_Click" />
+                    <MenuItem Header="Open _Saves Folder" Click="OpenSavesFolder_Click" />
                     <MenuItem Header="_Reload Mods List" Click="ReloadMods_Click" />
                     <Separator/>
                     <MenuItem Header="Select Game Location" Click="SelectGameLocation_Click" />

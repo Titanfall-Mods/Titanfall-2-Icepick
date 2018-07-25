@@ -11,12 +11,20 @@ namespace Icepick.Mods
 {
 	public static class ModDatabase
 	{
+		public enum ModImportType
+		{
+			Invalid,
+			Mod,
+			Save
+		}
+
 		public const string ModsDirectory = "data/mods";
+		public const string SavesDirectory = "data/saves";
 		private const string ArchiveExtension = ".zip";
 
 		public delegate void ModDatabaseDelegate();
 		public delegate void TitanfallModDelegate( TitanfallMod Mod );
-		public delegate void ImportModDelegate( bool success, string message );
+		public delegate void ImportModDelegate( bool success, ModImportType importType, string message );
 
 		public static event ModDatabaseDelegate OnStartedLoadingMods;
 		public static event TitanfallModDelegate OnModLoaded;
@@ -28,6 +36,12 @@ namespace Icepick.Mods
 		public static void ShowModsFolder()
 		{
 			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.ModsDirectory );
+			System.Diagnostics.Process.Start( path );
+		}
+
+		public static void ShowSavesFolder()
+		{
+			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.SavesDirectory );
 			System.Diagnostics.Process.Start( path );
 		}
 
@@ -87,7 +101,7 @@ namespace Icepick.Mods
 					{
 						if ( OnFinishedImportingMod != null )
 						{
-							OnFinishedImportingMod( false, $"A mod already exists in folder '{modFolderName}'!" );
+							OnFinishedImportingMod( false, ModImportType.Invalid, $"A mod already exists in folder '{modFolderName}'!" );
 						}
 						return;
 					}
@@ -95,20 +109,59 @@ namespace Icepick.Mods
 
 				try
 				{
-					ZipFile.ExtractToDirectory( path, destinationFolder );
+					bool foundModDefinition = false;
+					bool foundSaveFile = false;
+
+					ZipArchive zip = ZipFile.OpenRead( path );
+					foreach( var entry in zip.Entries )
+					{
+						Console.WriteLine( entry.Name );
+						string[] parts = entry.Name.Split( '.' );
+						if ( parts.Length > 2 && entry.Name.EndsWith( ".txt" ) )
+						{
+							foundSaveFile = true;
+						}
+
+						if( entry.Name == TitanfallMod.ModDocumentFile )
+						{
+							foundModDefinition = true;
+						}
+
+					}
+
+					if ( foundModDefinition )
+					{
+						// Extract mod to the mods folder
+						ZipFile.ExtractToDirectory( path, destinationFolder );
+
+						if ( OnFinishedImportingMod != null )
+						{
+							OnFinishedImportingMod( true, ModImportType.Mod, $"{modFolderName} imported successfully!" );
+						}
+					}
+					else if( foundSaveFile )
+					{
+						// Extract saves to the saves folder
+						destinationFolder = Path.Combine( Environment.CurrentDirectory, SavesDirectory );
+						ZipFile.ExtractToDirectory( path, destinationFolder );
+
+						if ( OnFinishedImportingMod != null )
+						{
+							OnFinishedImportingMod( true, ModImportType.Save, $"{modFolderName} imported to saves successfully!" );
+						}
+					}
+					else
+					{
+						throw new Exception( "Mod was not a valid mod, nor a save file." );
+					}
 				}
 				catch( Exception e )
 				{
 					if ( OnFinishedImportingMod != null )
 					{
-						OnFinishedImportingMod( false, $"An exception occurred while importing mod '{modFolderName}', {e.Message}" );
+						OnFinishedImportingMod( false, ModImportType.Invalid, $"An exception occurred while importing mod '{modFolderName}', {e.Message}" );
 					}
 					return;
-				}
-
-				if ( OnFinishedImportingMod != null )
-				{
-					OnFinishedImportingMod( true, $"{modFolderName} imported successfully!" );
 				}
 			}
 		}
