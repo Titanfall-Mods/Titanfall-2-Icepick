@@ -11,6 +11,8 @@ namespace Icepick.Api
 	{
 		private const string RegistrySubKey = @"SOFTWARE\TitanfallIcepick";
 		private const string GameLocationKey = "InstallPath";
+		private const string DisableCrashReportsKey = "DisableCrashReports";
+		private const string MachineUUIDKey = "MachineUUID";
 
 		private const string RespawnRegistrySubKey = @"SOFTWARE\WOW6432Node\Respawn\Titanfall2";
 		private const string RespawnInstallDirKey = "Install Dir";
@@ -18,33 +20,35 @@ namespace Icepick.Api
 
 		public static void WriteValue( string keyName, object value )
 		{
-			RegistryKey key = Registry.LocalMachine.CreateSubKey( RegistrySubKey, RegistryKeyPermissionCheck.ReadWriteSubTree );
+			RegistryKey key = Registry.CurrentUser.CreateSubKey( RegistrySubKey, RegistryKeyPermissionCheck.ReadWriteSubTree );
 			key.SetValue( keyName, value );
 			key.Close();
 		}
 
 		public static T ReadValue<T>( string keyName )
 		{
-			RegistryKey key = Registry.LocalMachine.OpenSubKey( RegistrySubKey );
-			if( key  != null )
+			RegistryKey key = Registry.CurrentUser.OpenSubKey( RegistrySubKey );
+			T value = default(T);
+			if ( key != null )
 			{
-				T value = (T) key.GetValue( keyName );
-				key.Close();
-				return value;
+				object val = key.GetValue( keyName );
+				if ( val != null )
+				{
+					value = (T)val;
+				}
 			}
-			else
-			{
-				return default(T);
-			}
+
+			key?.Close();
+			return value;
 		}
 
 		public static void ClearRegistry()
 		{
-			RegistryKey key = Registry.LocalMachine.OpenSubKey( RegistrySubKey );
+			RegistryKey key = Registry.CurrentUser.OpenSubKey( RegistrySubKey );
 			if ( key != null )
 			{
 				key.Close();
-				Registry.LocalMachine.DeleteSubKey( RegistrySubKey );
+				Registry.CurrentUser.DeleteSubKey( RegistrySubKey );
 			}
 		}
 
@@ -56,6 +60,26 @@ namespace Icepick.Api
 		public static string ReadGameInstallPath()
 		{
 			return ReadValue<string>( GameLocationKey );
+		}
+
+		public static void WriteDisableCrashReports( bool disableCrashReports )
+		{
+			WriteValue( DisableCrashReportsKey, disableCrashReports ? 1 : 0 );
+		}
+
+		public static bool ReadDisableCrashReports()
+		{
+			return ReadValue<int>( DisableCrashReportsKey ) == 1 ? true : false;
+		}
+
+		public static void WriteMachineUUID( string uuid )
+		{
+			WriteValue( MachineUUIDKey, uuid );
+		}
+
+		public static string ReadMachineUUID()
+		{
+			return ReadValue<string>( MachineUUIDKey );
 		}
 
 		public static string AttemptReadRespawnRegistryPath()

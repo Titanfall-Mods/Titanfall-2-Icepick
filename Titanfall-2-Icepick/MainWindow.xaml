@@ -22,7 +22,9 @@
                     <MenuItem Header="Open _Saves Folder" Click="OpenSavesFolder_Click" />
                     <MenuItem Header="_Reload Mods List" Click="ReloadMods_Click" />
                     <Separator/>
-                    <MenuItem Header="Select Game Location" Click="SelectGameLocation_Click" />
+                    <MenuItem Header="Select _Game Location" Click="SelectGameLocation_Click" />
+                    <Separator/>
+                    <MenuItem x:Name="btnDisableCrashReports" Header="Disable _Crash Reports" IsCheckable="True" StaysOpenOnClick="True" IsChecked="{Binding IsDisabled}"/>
                     <Separator/>
                     <MenuItem Header="_Quit" />
                 </MenuItem>
