@@ -57,8 +57,14 @@ namespace Icepick.Mods
 						Process potentialOriginProcess = ttfProcess.GetParentProcess();
 						if( potentialOriginProcess != null && potentialOriginProcess.ProcessName == OriginProcessName )
 						{
-							InjectSDK( ttfProcess );
-							return;
+							foreach ( ProcessModule module in ttfProcess.Modules )
+							{
+								if ( module.ModuleName == "tier0.dll" )
+								{
+									InjectSDK(ttfProcess);
+									return;
+								}
+							}
 						}
 					}
 					catch ( Win32Exception e )
