@@ -10,6 +10,7 @@ namespace Icepick.Api
     {
 		private const string TitanfallModsUrl = "http://www.titanfallmods.com";
 		private const string TitanfallModsApi = "http://www.titanfallmods.com/api/v1";
+		private const string TitanfallModsDiscord = "https://discord.gg/7UHZfMX";
 
 		private const string IcepickInfo = "{0}/icepick/info";
 		private const string AllPublicMods = "{0}/mods/info/public";
@@ -23,6 +24,11 @@ namespace Icepick.Api
 		public static string GetSite()
 		{
 			return TitanfallModsUrl;
+		}
+
+		public static string GetDiscord()
+		{
+			return TitanfallModsDiscord;
 		}
 
 		public static string GetApiRoute( string routeName, params string[] args )

@@ -36,6 +36,8 @@ namespace Icepick
 			Api.ApiQueue.OnApiRequestIssued += ApiQueue_OnApiRequestIssued;
 			Api.ApiQueue.OnApiRequestResult += ApiQueue_OnApiRequestResult;
 
+			TitanfallMod.OnStatusUpdateException += TitanfallMod_OnStatusUpdateException;
+
 			SDKInjector.OnLaunchingProcess += SDKInjector_OnLaunchingProcess;
 			SDKInjector.OnInjectingIntoProcess += SDKInjector_OnInjectingIntoProcess;
 			SDKInjector.OnInjectionComplete += SDKInjector_OnInjectionComplete;
@@ -106,6 +108,11 @@ namespace Icepick
 			}
 		}
 
+		private void TitanfallMod_OnStatusUpdateException( TitanfallMod mod, Exception e )
+		{
+			AddEvent( $"Encountered an exception while loading mod {mod.Definition.Name}: {e.Message}" );
+		}
+
 		private void SDKInjector_OnLaunchingProcess( string message )
 		{
 			AddEvent( "Launching Titanfall 2 and waiting for injection..." );
@@ -165,7 +172,12 @@ namespace Icepick
 		{
 			Process.Start( Api.ApiRoutes.GetSite() );
 		}
-		
+
+		private void OpenTitanfallModsDiscord_Click( object sender, RoutedEventArgs e )
+		{
+			Process.Start( Api.ApiRoutes.GetDiscord() );
+		}
+
 		private void ViewEventLog_Click( object sender, RoutedEventArgs e )
 		{
 			bool makeVisible = !EventLogButton.IsChecked;

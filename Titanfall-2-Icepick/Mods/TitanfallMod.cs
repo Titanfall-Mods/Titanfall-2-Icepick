@@ -25,6 +25,9 @@ namespace Icepick.Mods
 		public delegate void ModStateUpdatedDelegate();
 		public event ModStateUpdatedDelegate OnStatusUpdated;
 
+		public delegate void ModStateUpdateExceptionDelegate( TitanfallMod mod, Exception e );
+		public static event ModStateUpdateExceptionDelegate OnStatusUpdateException;
+
 		public TitanfallMod( string Directory )
 		{
 			string modDocumentPath = Path.Combine( Directory, ModDocumentFile );
@@ -81,17 +84,26 @@ namespace Icepick.Mods
 				else
 				{ 
 					Task<Api.ApiResult> requestTask = Api.ApiQueue.ApiRequest( "LatestModRelease", Definition.ApiId );
-					await requestTask;
-
-					Api.ApiResult results = requestTask.Result;
-					if ( results != null && results.data != null )
+					try
 					{
-						string latestReleaseId = null;
-						results.data.TryGetValue( "_id", out latestReleaseId );
-						RequiresUpdate = latestReleaseId != null && latestReleaseId != CurrentReleaseId;
-						if ( OnStatusUpdated != null )
+						await requestTask;
+						Api.ApiResult results = requestTask.Result;
+						if ( results != null && results.data != null )
 						{
-							OnStatusUpdated();
+							string latestReleaseId = null;
+							results.data.TryGetValue( "_id", out latestReleaseId );
+							RequiresUpdate = latestReleaseId != null && latestReleaseId != CurrentReleaseId;
+							if ( OnStatusUpdated != null )
+							{
+								OnStatusUpdated();
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						if( OnStatusUpdateException != null )
+						{
+							OnStatusUpdateException( this, e );
 						}
 					}
 				}
