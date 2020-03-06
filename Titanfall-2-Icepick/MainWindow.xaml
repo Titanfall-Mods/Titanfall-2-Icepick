@@ -37,8 +37,6 @@
                     <Separator />
                     <MenuItem x:Name="EventLogButton" Header="View Event Log" Click="ViewEventLog_Click" />
                     <MenuItem Header="Cleanup Registry" Click="CleanupRegistry_Click" />
-                    <Separator />
-                    <MenuItem Header="Check for _Updates" Click="CheckForUpdates_Click" />
                 </MenuItem>
             </Menu>
             <ScrollViewer x:Name="ModsViewer" Margin="0,20,0,65" >

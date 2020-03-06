@@ -23,8 +23,6 @@
             <ContextMenu>
                 <MenuItem x:Name="ViewDetailsMenuItem" Header="View Details" Click="ViewDetails_Click" />
                 <MenuItem Header="Show in Explorer" Click="ShowInExplorer_Click" />
-                <MenuItem x:Name="ShowOnSiteMenuItem" Header="Show on Titanfall Mods" Click="ShowOnSite_Click" />
-                <MenuItem x:Name="CheckForUpdatesMenuItem" Header="Check for Updates" Click="CheckForUpdates_Click" />
                 <Separator/>
                 <MenuItem x:Name="PackageModMenuItem" Header="Package Mod" Click="PackageMod_Click" />
             </ContextMenu>

@@ -59,17 +59,17 @@ namespace Icepick
 			}
 		}
 
-        private void CrashReporter_OnDumpProcessed( bool success, string name )
-        {
-            if (success)
-            {
-                AddEvent($"Crash report {name} submitted successfully", true);
-            }
-            else
-            {
-                AddEvent($"Failed to upload crash report {name}", true);
-            }
-        }
+		private void CrashReporter_OnDumpProcessed( bool success, string name )
+		{
+			if (success)
+			{
+				AddEvent($"Crash report {name} submitted successfully", true);
+			}
+			else
+			{
+				AddEvent($"Failed to upload crash report {name}", true);
+			}
+		}
 
 		private void ApiQueue_OnApiRequestIssued( string apiPath )
 		{
@@ -81,18 +81,6 @@ namespace Icepick
 			if( success )
 			{
 				AddEvent( $"Api request to {apiPath} succeeded! {result.rawData}", true );
-
-				if( apiPath == Api.ApiRoutes.GetApiRoute( "IcepickInfo" ) )
-				{
-					string latestIcepickId = null;
-					if( result.data.TryGetValue( "_id", out latestIcepickId ) )
-					{
-						if( latestIcepickId != Icepick.Version.Current )
-						{
-							OnIcepickUpdateAvailable();
-						}
-					}
-				}
 			}
 			else
 			{
@@ -125,7 +113,7 @@ namespace Icepick
 
 		private void SDKInjector_OnInjectionComplete( string message )
 		{
-			AddEvent( "Succesfully injected into Titanfall 2!" );
+			AddEvent( "Successfully injected into Titanfall 2!" );
 		}
 
 		private void SDKInjector_OnInjectionException( string message )
@@ -141,7 +129,6 @@ namespace Icepick
 		private void ModDatabase_OnFinishedLoadingMods()
 		{
 			AddEvent( "Finished loading mods!" );
-			CheckForAllUpdates();
 		}
 
 		private void ModDatabase_OnModLoaded( TitanfallMod mod )
@@ -219,11 +206,6 @@ namespace Icepick
 			about.Show();
 		}
 
-		private void CheckForUpdates_Click( object sender, RoutedEventArgs e )
-		{
-			CheckForAllUpdates();
-		}
-
 		private void SelectGameLocation_Click( object sender, RoutedEventArgs e )
 		{
 			ShowSelectGameLocation();
@@ -271,14 +253,6 @@ namespace Icepick
 			ModDatabase.LoadAll();
 		}
 
-		private void CheckForAllUpdates()
-		{
-			foreach( TitanfallMod mod in ModDatabase.LoadedMods )
-			{
-				mod.CheckForUpdates();
-			}
-		}
-
 		private void ShowSelectGameLocation()
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -290,31 +264,6 @@ namespace Icepick
 				if( !string.IsNullOrWhiteSpace( openFileDialog.FileName ) )
 				{
 					Api.IcepickRegistry.WriteGameInstallPath( openFileDialog.FileName );
-				}
-			}
-		}
-
-		private void OnIcepickUpdateAvailable()
-		{
-			// Show update on the Icepick framework mod
-			foreach ( TitanfallMod mod in ModDatabase.LoadedMods )
-			{
-				if( mod.IsIcepickFramework )
-				{
-					mod.IcepickUpdateAvailable();
-				}
-			}
-
-			// Show a popup too to nudge people to download it more
-			MessageBoxResult result = MessageBox.Show( "An update to the Icepick is available! It is highly recommend you download this update as soon as possible.\n\nDo you wish to go to the download page now?", "Icepick Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information );
-			if( result == MessageBoxResult.Yes )
-			{
-				foreach ( TitanfallMod mod in ModDatabase.LoadedMods )
-				{
-					if ( mod.IsIcepickFramework )
-					{
-						mod.OpenDownloadPage();
-					}
 				}
 			}
 		}

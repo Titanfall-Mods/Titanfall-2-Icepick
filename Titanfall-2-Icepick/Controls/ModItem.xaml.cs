@@ -157,7 +157,6 @@ namespace Icepick.Controls
 		private void Mod_OnStatusUpdated()
 		{
 			UpdateTooltipAndStatus();
-			UpdateDisabledOptions();
 		}
 
 		private void UpdateTooltipAndStatus()
@@ -194,15 +193,6 @@ namespace Icepick.Controls
 			Icon = StatusIconType.Ok;
 			TooltipHeader.Text = "All good";
 			TooltipText.Text = "This mod is up to date!";
-		}
-
-		private void UpdateDisabledOptions()
-		{
-			ViewDetailsMenuItem.IsEnabled = Mod.Definition != null;
-
-			bool hasApiId = Mod.Definition != null && !string.IsNullOrWhiteSpace( Mod.Definition.ApiId );
-			ShowOnSiteMenuItem.IsEnabled = hasApiId;
-			CheckForUpdatesMenuItem.IsEnabled = hasApiId;
 		}
 
 	}
