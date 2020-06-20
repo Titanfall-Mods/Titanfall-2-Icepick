@@ -16,9 +16,11 @@ namespace Icepick
 	{
 		private const string TitanfallExecutableFilter = "Titanfall 2 (Titanfall2.exe)|Titanfall2.exe";
 		private const string TitanfallDefaultInstallDir = @"C:\Program Files (x86)\Origin Games\Titanfall2\";
+		private const string SteamAppsDirectory = "steamapps";
 
 		List<string> eventHistory;
 		Settings settings;
+		Launcher selectedLauncher;
 
 		public MainWindow()
 		{
@@ -48,6 +50,8 @@ namespace Icepick
 			ModDatabase.OnModLoaded += ModDatabase_OnModLoaded;
 			ModDatabase.OnFinishedImportingMod += ModDatabase_OnFinishedImportingMod;
 			ModDatabase.LoadAll();
+
+			UpdateLauncherSelection();
 		}
 
 		private void AddEvent( string eventDescription, bool ignoreStatus = false )
@@ -223,6 +227,7 @@ namespace Icepick
 			{
 				ShowSelectGameLocation();
 				gamePath = Api.IcepickRegistry.ReadGameInstallPath();
+				UpdateLauncherSelection();
 			}
 			if ( string.IsNullOrEmpty( gamePath ) )
 			{
@@ -230,7 +235,7 @@ namespace Icepick
 				return;
 			}
 
-			SDKInjector.LaunchAndInject( gamePath );
+			SDKInjector.LaunchAndInject( selectedLauncher, gamePath );
 		}
 
 		private void Icepick_Drop( object sender, DragEventArgs e )
@@ -268,5 +273,24 @@ namespace Icepick
 			}
 		}
 
+		private void UpdateLauncherSelection()
+		{
+			// Default to Origin since that was the original release
+			selectedLauncher = Launcher.Origin;
+
+			// Use Steam launch if the install path contains steamapps
+			string gamePath = Api.IcepickRegistry.AttemptReadRespawnRegistryPath() ?? Api.IcepickRegistry.ReadGameInstallPath();
+			if ( !string.IsNullOrEmpty( gamePath ) )
+			{
+				selectedLauncher = gamePath.Contains( SteamAppsDirectory ) ? Launcher.Steam : Launcher.Origin;
+			}
+
+			launcherComboBox.SelectedIndex = (int) selectedLauncher;
+		}
+
+		private void SelectedLauncherChanged( object sender, SelectionChangedEventArgs e )
+		{
+			selectedLauncher = (Launcher) launcherComboBox.SelectedIndex;
+		}
 	}
 }

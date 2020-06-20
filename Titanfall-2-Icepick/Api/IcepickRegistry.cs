@@ -1,9 +1,5 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Icepick.Api
 {
@@ -100,7 +96,7 @@ namespace Icepick.Api
 			{
 				string value = (string) key.GetValue( RespawnInstallDirKey );
 				key.Close();
-				return value != null ? value + GameExecutable : null;
+				return value != null ? Path.Combine(value, GameExecutable) : null;
 			}
 			else
 			{

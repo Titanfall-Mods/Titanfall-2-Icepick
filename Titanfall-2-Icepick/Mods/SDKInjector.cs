@@ -18,8 +18,14 @@ namespace Icepick.Mods
 			public bool DeveloperMode;
 		};
 
-		private const float InjectionTimeout = 30;
+		private const int OriginInjectionTimeout = 30;
+		private const int SteamInjectionTimeout = 60; // Steam needs to launch Origin, so give it longer to load everything
+
 		private const string OriginProcessName = "Origin";
+		private const string TitanfallProcessName = "Titanfall2";
+		private const string SteamProxyProcessName = "EASteamProxy";
+		private const string LaunchViaSteamUrl = "steam://run/1237970";
+
 		public const string SDKDllName = "TTF2SDK.dll";
 		private const string SDKDataPath = @"data\";
 		private const string InitializeFunction = "InitialiseSDK";
@@ -30,23 +36,35 @@ namespace Icepick.Mods
 		public static event InjectorEventDelegate OnInjectionComplete;
 		public static event InjectorEventDelegate OnInjectionException;
 
-		public static void LaunchAndInject( string gamePath )
+		public static async void LaunchAndInject( Launcher launcher, string gamePath = null )
 		{
 			if( OnLaunchingProcess != null )
 			{
 				OnLaunchingProcess();
 			}
 
-			Process.Start( new ProcessStartInfo( gamePath ) );
-			Task watchAndInjectTask = WatchAndInject( gamePath );
+
+			switch(launcher)
+			{
+				case Launcher.Origin:
+					Process.Start( new ProcessStartInfo( gamePath ) );
+					await WatchAndInject( gamePath );
+					break;
+				case Launcher.Steam:
+					Process.Start( LaunchViaSteamUrl );
+					await WatchAndInject( TitanfallProcessName, SteamInjectionTimeout );
+					break;
+				default:
+					throw new NotImplementedException();
+			}
 		}
 
-		protected static async Task WatchAndInject( string gamePath )
+		protected static async Task WatchAndInject( string gamePath, int injectionTimeout = OriginInjectionTimeout )
 		{
 			string gameProcessName = System.IO.Path.GetFileNameWithoutExtension( gamePath );
 			DateTime startTime = DateTime.Now;
 
-			while ( (DateTime.Now - startTime).TotalSeconds < InjectionTimeout )
+			while ( (DateTime.Now - startTime).TotalSeconds < injectionTimeout )
 			{
 				Process[] ttfProcesses = Process.GetProcessesByName( gameProcessName );
 				if( ttfProcesses.Length > 0 )
@@ -55,7 +73,7 @@ namespace Icepick.Mods
 					try
 					{
 						Process potentialOriginProcess = ttfProcess.GetParentProcess();
-						if( potentialOriginProcess != null && potentialOriginProcess.ProcessName == OriginProcessName )
+						if( potentialOriginProcess != null && ( potentialOriginProcess.ProcessName == OriginProcessName || potentialOriginProcess.ProcessName == SteamProxyProcessName ) )
 						{
 							foreach ( ProcessModule module in ttfProcess.Modules )
 							{
@@ -87,7 +105,7 @@ namespace Icepick.Mods
 			}
 
 			// Will only reach here if injection doesn't occur within the timeout period, so log an event and show a popup
-			string timeoutError = string.Format( "Timed out after {0} seconds. Could not find Titanfall 2 process.", InjectionTimeout );
+			string timeoutError = string.Format( "Timed out after {0} seconds. Could not find Titanfall 2 process.", injectionTimeout );
 			if ( OnInjectionException != null )
 			{
 				OnInjectionException( timeoutError );

@@ -45,7 +45,14 @@
             <ScrollViewer x:Name="EventLogViewer" Margin="10,30,10,65" Visibility="Hidden" >
                 <StackPanel x:Name="EventLog"/>
             </ScrollViewer>
-            <Button Content="Launch Game" Height="50" Margin="10,0,10,10" VerticalAlignment="Bottom" Click="LaunchGame_Click"/>
+            <Grid Height="50" Margin="10,0,10,10" VerticalAlignment="Bottom">
+                <Button Content="Launch Game" Click="LaunchGame_Click" Margin="0,0,65,0"/>
+                <ComboBox x:Name="launcherComboBox" HorizontalAlignment="Right" Width="60"
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="SelectedLauncherChanged" >
+                    <Image Source="/Titanfall-2-Icepick;component/Images/launcher-steam.png" Width="32" Height="32"/>
+                    <Image Source="/Titanfall-2-Icepick;component/Images/launcher-origin.png" Width="32" Height="32"/>
+                </ComboBox>
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

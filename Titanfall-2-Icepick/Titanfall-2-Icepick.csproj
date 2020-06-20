@@ -92,6 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Api\IcepickRegistry.cs" />
+    <Compile Include="Api\Launcher.cs" />
     <Compile Include="Controls\AboutIcepick.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +199,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icepick-icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\launcher-origin.png" />
+    <Resource Include="Images\launcher-steam.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
