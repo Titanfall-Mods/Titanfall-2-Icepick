@@ -136,11 +136,11 @@ namespace Icepick.Mods
 				{
 					warnings.Add( "This mod has no description." );
 				}
-				if ( Definition.Authors.Count < 1 )
+				if ( Definition.Authors == null || Definition.Authors.Count < 1 )
 				{
 					warnings.Add( "This mod has no contact information." );
 				}
-				if ( Definition.Contacts.Count < 1 )
+				if ( Definition.Contacts == null || Definition.Contacts.Count < 1 )
 				{
 					warnings.Add( "This mod has no contact information." );
 				}
