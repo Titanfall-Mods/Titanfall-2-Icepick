@@ -31,8 +31,6 @@ namespace Icepick.Controls
 
 			if( parent.Mod != null )
 			{
-				AddUpdateNotice( parent.Mod );
-
 				if ( parent.Mod.Definition != null )
 				{
 					AddAuthors( parent.Mod.Definition );
@@ -90,22 +88,6 @@ namespace Icepick.Controls
 				TextBlock versionBlock = new TextBlock();
 				versionBlock.Text = definition.Version;
 				DetailsPanel.Children.Add( versionBlock );
-			}
-		}
-
-		protected void AddUpdateNotice( TitanfallMod mod )
-		{
-			if( mod.RequiresUpdate )
-			{
-				TextBlock title = new TextBlock();
-				title.Inlines.Add( new Bold( new Run( "Update Available!" ) ) );
-				DetailsPanel.Children.Add( title );
-
-				TextBlock content = new TextBlock();
-				content.Text = "An update for this mod is available and can be downloaded from it's page on Titanfall Mods.";
-				DetailsPanel.Children.Add( content );
-
-				DetailsPanel.Children.Add( new TextBlock() ); // Divider
 			}
 		}
 

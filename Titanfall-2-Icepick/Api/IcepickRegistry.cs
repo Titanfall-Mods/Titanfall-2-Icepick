@@ -56,7 +56,15 @@ namespace Icepick.Api
 
 		public static string ReadGameInstallPath()
 		{
-			return ReadValue<string>( GameLocationKey );
+			string path = ReadValue<string>( GameLocationKey );
+			if ( File.Exists( path ) )
+			{
+				return path;
+			}
+			else
+            {
+				return null;
+            }
 		}
 
 		public static void WriteDisableCrashReports( bool disableCrashReports )
@@ -96,13 +104,16 @@ namespace Icepick.Api
 			{
 				string value = (string) key.GetValue( RespawnInstallDirKey );
 				key.Close();
-				return value != null ? Path.Combine(value, GameExecutable) : null;
+				if ( value != null )
+                {
+					string gamePath = Path.Combine( value, GameExecutable );
+					if ( File.Exists( gamePath ) )
+					{
+						return gamePath;
+					}
+				}
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
-
 	}
 }

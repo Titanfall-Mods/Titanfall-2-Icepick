@@ -53,7 +53,6 @@ namespace Icepick.Controls
 		{
 			InitializeComponent();
 			Mod = mod;
-			Mod.OnStatusUpdated += Mod_OnStatusUpdated;
 
 			ModName = mod.Definition?.Name;
 			ModDescription = mod.Definition?.Description;
@@ -62,7 +61,7 @@ namespace Icepick.Controls
 				ModImage = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, mod.ImagePath );
 			}
 
-			Mod_OnStatusUpdated();
+			UpdateTooltipAndStatus();
 		}
 
 		public Mods.TitanfallMod Mod { get; set; }
@@ -125,16 +124,6 @@ namespace Icepick.Controls
 			System.Diagnostics.Process.Start( path );
 		}
 
-		private void ShowOnSite_Click( object sender, RoutedEventArgs e )
-		{
-			Mod.OpenDownloadPage();
-		}
-
-		private void CheckForUpdates_Click( object sender, RoutedEventArgs e )
-		{
-			Mod.CheckForUpdates();
-		}
-
 		private void ViewDetails_Click( object sender, RoutedEventArgs e )
 		{
 			ModDetailsWindow details = new ModDetailsWindow( this );
@@ -154,21 +143,8 @@ namespace Icepick.Controls
 			}
 		}
 
-		private void Mod_OnStatusUpdated()
-		{
-			UpdateTooltipAndStatus();
-		}
-
 		private void UpdateTooltipAndStatus()
 		{
-			if ( Mod.RequiresUpdate )
-			{
-				Icon = StatusIconType.Update;
-				TooltipHeader.Text = "Update Available";
-				TooltipText.Text = "This mod has an update available! Download it from Titanfall Mods via the context menu.";
-				return;
-			}
-
 			var ErrorsList = Mod.GetErrors();
 			var WarningsList = Mod.GetWarnings();
 
@@ -192,8 +168,7 @@ namespace Icepick.Controls
 
 			Icon = StatusIconType.Ok;
 			TooltipHeader.Text = "All good";
-			TooltipText.Text = "This mod is up to date!";
+			TooltipText.Text = "This mod is setup correctly";
 		}
-
 	}
 }

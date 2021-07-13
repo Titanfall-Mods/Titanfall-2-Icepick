@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Icepick.Mods
@@ -18,8 +15,8 @@ namespace Icepick.Mods
 			Save
 		}
 
-		public const string ModsDirectory = "data/mods";
-		public const string SavesDirectory = "data/saves";
+		public const string ModsDirectory = @"data\mods";
+		public const string SavesDirectory = @"data\saves";
 		private const string ArchiveExtension = ".zip";
 
 		public delegate void ModDatabaseDelegate();
@@ -56,12 +53,14 @@ namespace Icepick.Mods
 				OnStartedLoadingMods();
 			}
 
-			if ( Directory.Exists( ModsDirectory ) )
+			string modsFullDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory );
+
+			if ( Directory.Exists( modsFullDirectory ) )
 			{
-				foreach ( var ModPath in Directory.GetDirectories( ModsDirectory ) )
+				foreach ( var modPath in Directory.GetDirectories( modsFullDirectory ) )
 				{
-					TitanfallMod newMod = new TitanfallMod( ModPath );
-					string modDirectory = System.IO.Path.GetFileName( newMod.Directory );
+					TitanfallMod newMod = new TitanfallMod( modPath );
+					string modDirectory = Path.GetFileName( newMod.Directory );
 					if ( !modDirectory.StartsWith( "." ) )
 					{
 						LoadedMods.Add( newMod );
@@ -114,7 +113,6 @@ namespace Icepick.Mods
 					ZipArchive zip = ZipFile.OpenRead( path );
 					foreach( var entry in zip.Entries )
 					{
-						Console.WriteLine( entry.Name );
 						string[] parts = entry.Name.Split( '.' );
 						if ( parts.Length > 2 && entry.Name.EndsWith( ".txt" ) )
 						{

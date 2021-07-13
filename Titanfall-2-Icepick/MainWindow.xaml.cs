@@ -35,11 +35,6 @@ namespace Icepick
 			CrashReporting.CrashReporter.StartWatching();
 			CrashReporting.CrashReporter.OnCrashDumpProcessed += CrashReporter_OnDumpProcessed;
 
-			Api.ApiQueue.OnApiRequestIssued += ApiQueue_OnApiRequestIssued;
-			Api.ApiQueue.OnApiRequestResult += ApiQueue_OnApiRequestResult;
-
-			TitanfallMod.OnStatusUpdateException += TitanfallMod_OnStatusUpdateException;
-
 			SDKInjector.OnLaunchingProcess += SDKInjector_OnLaunchingProcess;
 			SDKInjector.OnInjectingIntoProcess += SDKInjector_OnInjectingIntoProcess;
 			SDKInjector.OnInjectionComplete += SDKInjector_OnInjectionComplete;
@@ -73,36 +68,6 @@ namespace Icepick
 			{
 				AddEvent($"Failed to upload crash report {name}", true);
 			}
-		}
-
-		private void ApiQueue_OnApiRequestIssued( string apiPath )
-		{
-			AddEvent( $"Issued api request to {apiPath}", true );
-		}
-
-		private void ApiQueue_OnApiRequestResult( string apiPath, bool success, Api.ApiResult result )
-		{
-			if( success )
-			{
-				AddEvent( $"Api request to {apiPath} succeeded! {result.rawData}", true );
-			}
-			else
-			{
-				if ( result != null )
-				{
-					AddEvent( $"Api request to {apiPath} failed with message: {result.message}", true );
-				}
-				else
-				{
-					AddEvent( $"Api request to {apiPath} failed with no return result.", true );
-				}
-				
-			}
-		}
-
-		private void TitanfallMod_OnStatusUpdateException( TitanfallMod mod, Exception e )
-		{
-			AddEvent( $"Encountered an exception while loading mod {mod.Definition.Name}: {e.Message}" );
 		}
 
 		private void SDKInjector_OnLaunchingProcess( string message )

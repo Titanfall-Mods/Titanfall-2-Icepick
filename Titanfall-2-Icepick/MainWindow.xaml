@@ -32,8 +32,8 @@
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About" Click="About_Click" />
-                    <MenuItem Header="Open _Titanfall Mods" Click="OpenTitanfallMods_Click" />
-                    <MenuItem Header="Join the Titanfall Mods _Discord" Click="OpenTitanfallModsDiscord_Click" />
+                    <MenuItem Header="_Titanfall Mods Website" Click="OpenTitanfallMods_Click" />
+                    <MenuItem Header="Titanfall Mods _Discord" Click="OpenTitanfallModsDiscord_Click" />
                     <Separator />
                     <MenuItem x:Name="EventLogButton" Header="View Event Log" Click="ViewEventLog_Click" />
                     <MenuItem Header="Cleanup Registry" Click="CleanupRegistry_Click" />

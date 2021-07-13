@@ -3,6 +3,7 @@ using Syringe;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -48,7 +49,7 @@ namespace Icepick.Mods
 			{
 				case Launcher.Origin:
 					Process.Start( new ProcessStartInfo( gamePath ) );
-					await WatchAndInject( gamePath );
+					await WatchAndInject( gamePath, OriginInjectionTimeout );
 					break;
 				case Launcher.Steam:
 					Process.Start( LaunchViaSteamUrl );
@@ -59,7 +60,7 @@ namespace Icepick.Mods
 			}
 		}
 
-		protected static async Task WatchAndInject( string gamePath, int injectionTimeout = OriginInjectionTimeout )
+		protected static async Task WatchAndInject( string gamePath, int injectionTimeout )
 		{
 			string gameProcessName = System.IO.Path.GetFileNameWithoutExtension( gamePath );
 			DateTime startTime = DateTime.Now;
@@ -101,7 +102,7 @@ namespace Icepick.Mods
 					}
 				}
 
-				await Task.Delay( 1000 );
+				await Task.Delay( 500 );
 			}
 
 			// Will only reach here if injection doesn't occur within the timeout period, so log an event and show a popup
@@ -112,7 +113,7 @@ namespace Icepick.Mods
 			}
 			MessageBox.Show( timeoutError, "Injection Failed", MessageBoxButton.OK, MessageBoxImage.Exclamation );
 		}
-		
+
 		protected static void InjectSDK( Process targetProcess )
 		{
 			if( OnInjectingIntoProcess != null )
@@ -125,7 +126,7 @@ namespace Icepick.Mods
 			syringe.InjectLibrary( SDKDllName );
 
 			SDKSettings settings = new SDKSettings();
-			settings.BasePath = AppDomain.CurrentDomain.BaseDirectory + SDKDataPath;
+			settings.BasePath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, SDKDataPath );
 			settings.DeveloperMode = Api.IcepickRegistry.ReadEnableDeveloperMode();
 			syringe.CallExport( SDKDllName, InitializeFunction, settings );
 
