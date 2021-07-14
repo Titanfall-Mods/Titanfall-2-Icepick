@@ -35,13 +35,13 @@ namespace Icepick.Mods
 
 		public static void ShowModsFolder()
 		{
-			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.ModsDirectory );
+			string path = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModDatabase.ModsDirectory );
 			System.Diagnostics.Process.Start( path );
 		}
 
 		public static void ShowSavesFolder()
 		{
-			string path = System.IO.Path.Combine( Environment.CurrentDirectory, ModDatabase.SavesDirectory );
+			string path = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModDatabase.SavesDirectory );
 			System.Diagnostics.Process.Start( path );
 		}
 
@@ -84,7 +84,7 @@ namespace Icepick.Mods
 		{
 			if ( Path.GetExtension( path ) == ArchiveExtension )
 			{
-				string modsFullDirectory = Path.Combine( Environment.CurrentDirectory, ModsDirectory );
+				string modsFullDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory );
 				Console.WriteLine( modsFullDirectory );
 
 				// Check if a mod already exists
@@ -142,7 +142,7 @@ namespace Icepick.Mods
 					else if( foundSaveFile )
 					{
 						// Extract saves to the saves folder
-						destinationFolder = Path.Combine( Environment.CurrentDirectory, SavesDirectory );
+						destinationFolder = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, SavesDirectory );
 						ZipFile.ExtractToDirectory( path, destinationFolder );
 
 						if ( OnFinishedImportingMod != null )
@@ -168,8 +168,8 @@ namespace Icepick.Mods
 
 		public static string PackageMod( string path )
 		{
-			string exportPath = Path.Combine( Environment.CurrentDirectory, ModsDirectory, Path.GetFileName( path ) ) + ArchiveExtension;
-			string modDirectory = Path.Combine( Environment.CurrentDirectory, path );
+			string exportPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory, Path.GetFileName( path ) ) + ArchiveExtension;
+			string modDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, path );
 			string errorMessage = null;
 
 			try
