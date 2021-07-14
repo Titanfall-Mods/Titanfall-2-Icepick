@@ -22,7 +22,7 @@ namespace Icepick.CrashReporting
 
 		public static void StartWatching()
 		{
-			string crashDumpsPath = Path.Combine( Environment.CurrentDirectory, "data", "crash_dumps" );
+			string crashDumpsPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "data", "crash_dumps" );
 			if( !Directory.Exists( crashDumpsPath ) )
 			{
 				Directory.CreateDirectory( crashDumpsPath );
@@ -97,7 +97,7 @@ namespace Icepick.CrashReporting
 			}
 
 			// Get disk space information
-			string rootPath = Path.GetPathRoot(Environment.CurrentDirectory);
+			string rootPath = Path.GetPathRoot(AppDomain.CurrentDomain.BaseDirectory);
 			ulong freeStorage = 0;
 			ulong storageSize = 0;
 			ulong dummy;

@@ -59,7 +59,7 @@ namespace Icepick.Controls
 			ModDescription = mod.Definition?.Description;
 			if ( !string.IsNullOrEmpty( mod.ImagePath ) )
 			{
-				ModImage = System.IO.Path.Combine( Environment.CurrentDirectory, mod.ImagePath );
+				ModImage = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, mod.ImagePath );
 			}
 
 			Mod_OnStatusUpdated();
@@ -121,7 +121,7 @@ namespace Icepick.Controls
 
 		private void ShowInExplorer_Click( object sender, RoutedEventArgs e )
 		{
-			string path = System.IO.Path.Combine( Environment.CurrentDirectory, Mod.Directory );
+			string path = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, Mod.Directory );
 			System.Diagnostics.Process.Start( path );
 		}
 

@@ -121,7 +121,7 @@ namespace Icepick.Mods
 			}
 
 			Injector syringe = new Injector( targetProcess );
-			syringe.SetDLLSearchPath( System.IO.Directory.GetCurrentDirectory() );
+			syringe.SetDLLSearchPath( AppDomain.CurrentDomain.BaseDirectory );
 			syringe.InjectLibrary( SDKDllName );
 
 			SDKSettings settings = new SDKSettings();
