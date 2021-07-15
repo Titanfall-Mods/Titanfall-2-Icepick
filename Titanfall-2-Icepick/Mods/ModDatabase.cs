@@ -33,16 +33,15 @@ namespace Icepick.Mods
 
 		public static List<TitanfallMod> LoadedMods = new List<TitanfallMod>();
 
-		public static void ShowModsFolder()
-		{
-			string path = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModDatabase.ModsDirectory );
-			System.Diagnostics.Process.Start( path );
-		}
-
-		public static void ShowSavesFolder()
-		{
-			string path = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModDatabase.SavesDirectory );
-			System.Diagnostics.Process.Start( path );
+		public static void ShowFolder(string directory)
+        {
+			string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directory);
+			if (!Directory.Exists(path))
+            {
+				MessageBox.Show($"The directory '{path}' is missing!", "Missing Directory", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				return;
+			}
+			System.Diagnostics.Process.Start(path);
 		}
 
 		public static void ClearDatabase()

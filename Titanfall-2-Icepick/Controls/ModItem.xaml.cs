@@ -146,7 +146,7 @@ namespace Icepick.Controls
 			string errorMessage = Mods.ModDatabase.PackageMod( Mod.Directory );
 			if ( errorMessage == null )
 			{
-				Mods.ModDatabase.ShowModsFolder();
+				Mods.ModDatabase.ShowFolder(Mods.ModDatabase.ModsDirectory);
 			}
 			else
 			{

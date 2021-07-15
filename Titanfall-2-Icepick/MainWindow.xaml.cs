@@ -191,12 +191,12 @@ namespace Icepick
 
 		private void OpenModsFolder_Click( object sender, RoutedEventArgs e )
 		{
-			ModDatabase.ShowModsFolder();
+			ModDatabase.ShowFolder(ModDatabase.ModsDirectory);
 		}
 
 		private void OpenSavesFolder_Click( object sender, RoutedEventArgs e )
 		{
-			ModDatabase.ShowSavesFolder();
+			ModDatabase.ShowFolder(ModDatabase.SavesDirectory);
 		}
 
 		private void ReloadMods_Click( object sender, RoutedEventArgs e )
