@@ -34,10 +34,10 @@ namespace Icepick.Mods
 		public static List<TitanfallMod> LoadedMods = new List<TitanfallMod>();
 
 		public static void ShowFolder(string directory)
-        {
+		{
 			string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directory);
 			if (!Directory.Exists(path))
-            {
+			{
 				MessageBox.Show($"The directory '{path}' is missing!", "Missing Directory", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				return;
 			}

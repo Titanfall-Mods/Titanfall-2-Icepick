@@ -221,7 +221,7 @@ namespace Icepick
 		}
 
 		private void Quit_Click(object sender, RoutedEventArgs e)
-        {
+		{
 			Application.Current.Shutdown();
 		}
 
