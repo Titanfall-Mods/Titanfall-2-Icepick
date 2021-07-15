@@ -220,6 +220,11 @@ namespace Icepick
 			Api.IcepickRegistry.ClearRegistry();
 		}
 
+		private void Quit_Click(object sender, RoutedEventArgs e)
+        {
+			Application.Current.Shutdown();
+		}
+
 		private void LaunchGame_Click( object sender, RoutedEventArgs e )
 		{
 			string gamePath = Api.IcepickRegistry.AttemptReadRespawnRegistryPath() ?? Api.IcepickRegistry.ReadGameInstallPath();
