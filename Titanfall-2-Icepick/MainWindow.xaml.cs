@@ -191,12 +191,12 @@ namespace Icepick
 
 		private void OpenModsFolder_Click( object sender, RoutedEventArgs e )
 		{
-			ModDatabase.ShowModsFolder();
+			ModDatabase.ShowFolder(ModDatabase.ModsDirectory);
 		}
 
 		private void OpenSavesFolder_Click( object sender, RoutedEventArgs e )
 		{
-			ModDatabase.ShowSavesFolder();
+			ModDatabase.ShowFolder(ModDatabase.SavesDirectory);
 		}
 
 		private void ReloadMods_Click( object sender, RoutedEventArgs e )
@@ -218,6 +218,11 @@ namespace Icepick
 		private void CleanupRegistry_Click( object sender, RoutedEventArgs e )
 		{
 			Api.IcepickRegistry.ClearRegistry();
+		}
+
+		private void Quit_Click(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown();
 		}
 
 		private void LaunchGame_Click( object sender, RoutedEventArgs e )

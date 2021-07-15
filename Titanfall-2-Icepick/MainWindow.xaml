@@ -24,7 +24,7 @@
                     <Separator/>
                     <MenuItem Header="Select _Game Location" Click="SelectGameLocation_Click" />
                     <Separator/>
-                    <MenuItem Header="_Quit" />
+                    <MenuItem Header="_Quit" Click="Quit_Click" />
                 </MenuItem>
                 <MenuItem Header="_Settings">
                     <MenuItem x:Name="btnDisableCrashReports" Header="Disable _Crash Reports" IsCheckable="True" IsChecked="{Binding CrashReportingDisabled}"/>
