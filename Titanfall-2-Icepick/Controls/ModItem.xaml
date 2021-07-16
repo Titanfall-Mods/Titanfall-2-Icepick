@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Icepick.Controls"
-             mc:Ignorable="d" d:DesignWidth="300" Height="50">
+             mc:Ignorable="d" d:DesignWidth="300" Height="50"
+             MouseDoubleClick="ToggleMod_Click">
     <Grid>
         <Label x:Name="ModNameLabel" Content="Unnamed Mod" VerticalAlignment="Top" FontWeight="Bold" Margin="55,0,0,0" FontSize="14"/>
         <Label x:Name="ModDescriptionLabel" Content="Mod Description." VerticalAlignment="Top" Margin="55,20,0,0" FontStyle="Italic"/>
@@ -21,6 +22,8 @@
         </Grid.ToolTip>
         <Grid.ContextMenu>
             <ContextMenu>
+                <MenuItem x:Name="EnabledMenuItem" Header="Enabled" IsChecked="True" Click="ToggleMod_Click"/>
+                <Separator/>
                 <MenuItem x:Name="ViewDetailsMenuItem" Header="View Details" Click="ViewDetails_Click" />
                 <MenuItem Header="Show in Explorer" Click="ShowInExplorer_Click" />
                 <Separator/>
