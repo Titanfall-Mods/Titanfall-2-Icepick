@@ -56,6 +56,7 @@ namespace Icepick.Controls
 
 			ModName = mod.Definition?.Name;
 			ModDescription = mod.Definition?.Description;
+			ModEnabled = mod.Enabled;
 			if ( !string.IsNullOrEmpty( mod.ImagePath ) )
 			{
 				ModImage = System.IO.Path.Combine( AppDomain.CurrentDomain.BaseDirectory, mod.ImagePath );
@@ -87,6 +88,25 @@ namespace Icepick.Controls
 			get
 			{
 				return (string) ModDescriptionLabel.Content;
+			}
+		}
+
+		public bool ModEnabled
+		{
+			set
+			{
+				if (value)
+				{
+					Opacity = 1.0;
+					ModStatusImage.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Opacity = 0.5;
+					ModStatusImage.Visibility = Visibility.Hidden;
+				}
+				EnabledMenuItem.IsChecked = value;
+				Mod.Enabled = value;
 			}
 		}
 
@@ -140,6 +160,18 @@ namespace Icepick.Controls
 			else
 			{
 				MessageBox.Show( $"Could not package mod.\n{errorMessage}", "Package Error", MessageBoxButton.OK, MessageBoxImage.Exclamation );
+			}
+		}
+
+		private void ToggleMod_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				ModEnabled = Mods.ModDatabase.ToggleMod(Mod.Directory);
+			}
+			catch (Exception err)
+			{
+				MessageBox.Show($"Could not {(Mod.Enabled ? "disable" : "enable")} mod.\n{err.Message}", "Toggle Mod Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 

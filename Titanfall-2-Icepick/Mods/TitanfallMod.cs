@@ -8,11 +8,13 @@ namespace Icepick.Mods
 	{
 		public const string ModDocumentFile = "mod.json";
 		const string ModImage = "mod.png";
+		const string DisabledFile = "disabled";
 		const string IcepickModName = "Icepick Framework";
 
 		public TitanfallModDefinition Definition;
 		public string ImagePath;
 		public string Directory;
+		public bool Enabled;
 
 		public TitanfallMod( string Directory )
 		{
@@ -34,6 +36,9 @@ namespace Icepick.Mods
 			{
 				ImagePath = modImagePath;
 			}
+
+			string disabledFilePath = Path.Combine(Directory, DisabledFile);
+			Enabled = !File.Exists(disabledFilePath);
 		}
 
 		public bool IsIcepickFramework

@@ -17,6 +17,7 @@ namespace Icepick.Mods
 
 		public const string ModsDirectory = @"data\mods";
 		public const string SavesDirectory = @"data\saves";
+		public const string DisabledFileName = "disabled";
 		private const string ArchiveExtension = ".zip";
 
 		public delegate void ModDatabaseDelegate();
@@ -179,6 +180,20 @@ namespace Icepick.Mods
 			}
 
 			return errorMessage;
+		}
+
+		public static bool ToggleMod(string path)
+		{
+			string disabledFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory, Path.GetFileName(path), DisabledFileName);
+
+			if (File.Exists(disabledFilePath))
+			{
+				File.Delete(disabledFilePath);
+				return true;
+			}
+
+			File.Create(disabledFilePath).Close();
+			return false;
 		}
 
 	}
