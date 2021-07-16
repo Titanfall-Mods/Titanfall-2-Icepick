@@ -132,6 +132,11 @@ namespace Icepick.Mods
 						// Extract mod to the mods folder
 						ZipFile.ExtractToDirectory( path, destinationFolder );
 
+						if (File.Exists(Path.Combine(destinationFolder, DisabledFileName)))
+						{
+							File.Delete(Path.Combine(destinationFolder, DisabledFileName));
+						}
+
 						if ( OnFinishedImportingMod != null )
 						{
 							OnFinishedImportingMod( true, ModImportType.Mod, $"{modFolderName} imported successfully!" );
@@ -168,11 +173,25 @@ namespace Icepick.Mods
 		{
 			string exportPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory, Path.GetFileName( path ) ) + ArchiveExtension;
 			string modDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, path );
+			string disabledFilePath = Path.Combine(modDirectory, DisabledFileName);
 			string errorMessage = null;
 
 			try
 			{
+				bool isDisabled = File.Exists(disabledFilePath);
+				if (isDisabled)
+				{
+					// prevent packaging the disabled status file
+					File.Delete(disabledFilePath);
+				}
+
 				ZipFile.CreateFromDirectory( modDirectory, exportPath );
+
+				if (isDisabled)
+				{
+					// recreate the disabled status file if applicable
+					File.Create(disabledFilePath).Close();
+				}
 			}
 			catch( Exception e )
 			{
