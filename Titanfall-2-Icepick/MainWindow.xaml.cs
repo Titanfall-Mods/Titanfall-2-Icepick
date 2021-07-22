@@ -17,6 +17,7 @@ namespace Icepick
 		private const string TitanfallExecutableFilter = "Titanfall 2 (Titanfall2.exe)|Titanfall2.exe";
 		private const string TitanfallDefaultInstallDir = @"C:\Program Files (x86)\Origin Games\Titanfall2\";
 		private const string SteamAppsDirectory = "steamapps";
+		private const string EADesktopDirectory = "EA Games";
 
 		List<string> eventHistory;
 		Settings settings;
@@ -252,7 +253,14 @@ namespace Icepick
 			string gamePath = Api.IcepickRegistry.AttemptReadRespawnRegistryPath() ?? Api.IcepickRegistry.ReadGameInstallPath();
 			if ( !string.IsNullOrEmpty( gamePath ) )
 			{
-				selectedLauncher = gamePath.Contains( SteamAppsDirectory ) ? Launcher.Steam : Launcher.Origin;
+				if ( gamePath.Contains( SteamAppsDirectory ) )
+				{
+					selectedLauncher = Launcher.Steam;
+				}
+				else if ( gamePath.Contains( EADesktopDirectory ) )
+				{
+					selectedLauncher = Launcher.EADesktop;
+				}
 			}
 
 			launcherComboBox.SelectedIndex = (int) selectedLauncher;
