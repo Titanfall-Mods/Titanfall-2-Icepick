@@ -1,4 +1,4 @@
-﻿using Icepick.Extensions;
+using Icepick.Extensions;
 using Syringe;
 using System;
 using System.ComponentModel;
@@ -23,6 +23,7 @@ namespace Icepick.Mods
 		private const int SteamInjectionTimeout = 60; // Steam needs to launch Origin, so give it longer to load everything
 
 		private const string OriginProcessName = "Origin";
+		private const string EADesktopProcessName = "EADesktop";
 		private const string TitanfallProcessName = "Titanfall2";
 		private const string SteamProxyProcessName = "EASteamProxy";
 		private const string LaunchViaSteamUrl = "steam://run/1237970";
@@ -47,6 +48,7 @@ namespace Icepick.Mods
 
 			switch(launcher)
 			{
+				case Launcher.EADesktop:
 				case Launcher.Origin:
 					Process.Start( new ProcessStartInfo( gamePath ) );
 					await WatchAndInject( gamePath, OriginInjectionTimeout );
@@ -74,7 +76,7 @@ namespace Icepick.Mods
 					try
 					{
 						Process potentialOriginProcess = ttfProcess.GetParentProcess();
-						if( potentialOriginProcess != null && ( potentialOriginProcess.ProcessName == OriginProcessName || potentialOriginProcess.ProcessName == SteamProxyProcessName ) )
+						if( potentialOriginProcess != null && ( potentialOriginProcess.ProcessName == OriginProcessName || potentialOriginProcess.ProcessName == SteamProxyProcessName || potentialOriginProcess.ProcessName == EADesktopProcessName ) )
 						{
 							foreach ( ProcessModule module in ttfProcess.Modules )
 							{
