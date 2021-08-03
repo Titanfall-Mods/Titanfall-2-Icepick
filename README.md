@@ -5,8 +5,8 @@ This is the launcher for Titanfall 2 that will inject the TTF2SDK.dll into the g
 
 ## Requirements
 
- - Visual Studio 2017
- - DotNet Framework 4.5
+ - Visual Studio 2019
+ - DotNet Framework 4.6
 
 ## Building
 
