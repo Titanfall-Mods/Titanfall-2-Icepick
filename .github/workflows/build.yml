@@ -1,0 +1,65 @@
+name: Build Titanfall 2 Icepick
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup nuget
+        uses: nuget/setup-nuget@v1
+
+      - name: Restore nuget packages
+        run: nuget restore Titanfall-2-Icepick.sln
+
+      - name: Build
+        run: msbuild /m /p:Configuration=Release Titanfall-2-Icepick.sln
+
+      - name: Checkout core mods
+        uses: actions/checkout@v2
+        with:
+          repository: Titanfall-Mods/Icepick-Core-Mods
+          path: Titanfall-2-Icepick/bin/Release/data
+
+      - name: Download latest TTF2SDK.dll
+        working-directory: Titanfall-2-Icepick/bin/Release/
+        run: gh release download --pattern TTF2SDK.dll --repo Titanfall-Mods/TTF2SDK
+        shell: powershell
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove extra files
+        working-directory: Titanfall-2-Icepick/bin/Release/
+        run: del Titanfall-2-Icepick.pdb && rmdir data\.git /s /q && del data\.gitignore && del data\LICENSE.md && del data\README.md
+        shell: cmd
+
+      - name: Create release archive
+        run: Compress-Archive -Path Titanfall-2-Icepick\bin\Release\* -DestinationPath Titanfall-2-Icepick.zip
+        shell: powershell
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: icepick
+          path: |
+            Titanfall-2-Icepick.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            Titanfall-2-Icepick.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
