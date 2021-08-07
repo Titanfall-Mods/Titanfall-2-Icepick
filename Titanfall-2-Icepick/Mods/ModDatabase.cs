@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Icepick.Mods
@@ -21,13 +23,14 @@ namespace Icepick.Mods
 		private const string ArchiveExtension = ".zip";
 
 		public delegate void ModDatabaseDelegate();
-		public delegate void TitanfallModDelegate( TitanfallMod Mod );
-		public delegate void ImportModDelegate( bool success, ModImportType importType, string message );
+		public delegate void TitanfallModDelegate(TitanfallMod Mod);
+		public delegate void ImportModDelegate(bool success, ModImportType importType, string message);
 
 		public static event ModDatabaseDelegate OnStartedLoadingMods;
 		public static event TitanfallModDelegate OnModLoaded;
 		public static event ModDatabaseDelegate OnFinishedLoadingMods;
 		public static event ImportModDelegate OnFinishedImportingMod;
+		public static event ModDatabaseDelegate OnModsChanged;
 
 		public static List<TitanfallMod> LoadedMods = new List<TitanfallMod>();
 
@@ -49,58 +52,58 @@ namespace Icepick.Mods
 
 		public static void LoadAll()
 		{
-			if ( OnStartedLoadingMods != null )
+			if (OnStartedLoadingMods != null)
 			{
 				OnStartedLoadingMods();
 			}
 
-			string modsFullDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory );
+			string modsFullDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory);
 
-			if ( Directory.Exists( modsFullDirectory ) )
+			if (Directory.Exists(modsFullDirectory))
 			{
-				foreach ( var modPath in Directory.GetDirectories( modsFullDirectory ) )
+				foreach (var modPath in Directory.GetDirectories(modsFullDirectory))
 				{
-					TitanfallMod newMod = new TitanfallMod( modPath );
-					string modDirectory = Path.GetFileName( newMod.Directory );
-					if ( !modDirectory.StartsWith( "." ) )
+					TitanfallMod newMod = new TitanfallMod(modPath);
+					string modDirectory = Path.GetFileName(newMod.Directory);
+					if (!modDirectory.StartsWith("."))
 					{
-						LoadedMods.Add( newMod );
-						if ( OnModLoaded != null )
+						LoadedMods.Add(newMod);
+						if (OnModLoaded != null)
 						{
-							OnModLoaded( newMod );
+							OnModLoaded(newMod);
 						}
 					}
 				}
 			}
 
-			if ( OnFinishedLoadingMods != null )
+			if (OnFinishedLoadingMods != null)
 			{
 				OnFinishedLoadingMods();
 			}
 		}
 
-		public static void AttemptImportMod( string path )
+		public static void AttemptImportMod(string path)
 		{
-			if ( Path.GetExtension( path ) == ArchiveExtension )
+			if (Path.GetExtension(path) == ArchiveExtension)
 			{
-				string modsFullDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory );
-				Console.WriteLine( modsFullDirectory );
+				string modsFullDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory);
+				Console.WriteLine(modsFullDirectory);
 
 				// Check if a mod already exists
-				string modFolderName = Path.GetFileNameWithoutExtension( path );
-				string destinationFolder = Path.Combine( modsFullDirectory, modFolderName );
-				if( Directory.Exists( destinationFolder ) )
+				string modFolderName = Path.GetFileNameWithoutExtension(path);
+				string destinationFolder = Path.Combine(modsFullDirectory, modFolderName);
+				if (Directory.Exists(destinationFolder))
 				{
-					MessageBoxResult overwriteResult = MessageBox.Show( $"'{modFolderName}' already exists in your mods folder.\n\nDo you wish to overwrite it?", "Overwrite Mod?", MessageBoxButton.YesNo );
-					if( overwriteResult == MessageBoxResult.Yes )
+					MessageBoxResult overwriteResult = MessageBox.Show($"'{modFolderName}' already exists in your mods folder.\n\nDo you wish to overwrite it?", "Overwrite Mod?", MessageBoxButton.YesNo);
+					if (overwriteResult == MessageBoxResult.Yes)
 					{
-						Directory.Delete( destinationFolder, true );
+						Directory.Delete(destinationFolder, true);
 					}
 					else
 					{
-						if ( OnFinishedImportingMod != null )
+						if (OnFinishedImportingMod != null)
 						{
-							OnFinishedImportingMod( false, ModImportType.Invalid, $"A mod already exists in folder '{modFolderName}'!" );
+							OnFinishedImportingMod(false, ModImportType.Invalid, $"A mod already exists in folder '{modFolderName}'!");
 						}
 						return;
 					}
@@ -111,68 +114,68 @@ namespace Icepick.Mods
 					bool foundModDefinition = false;
 					bool foundSaveFile = false;
 
-					ZipArchive zip = ZipFile.OpenRead( path );
-					foreach( var entry in zip.Entries )
+					ZipArchive zip = ZipFile.OpenRead(path);
+					foreach (var entry in zip.Entries)
 					{
-						string[] parts = entry.Name.Split( '.' );
-						if ( parts.Length > 2 && entry.Name.EndsWith( ".txt" ) )
+						string[] parts = entry.Name.Split('.');
+						if (parts.Length > 2 && entry.Name.EndsWith(".txt"))
 						{
 							foundSaveFile = true;
 						}
 
-						if( entry.Name == TitanfallMod.ModDocumentFile )
+						if (entry.Name == TitanfallMod.ModDocumentFile)
 						{
 							foundModDefinition = true;
 						}
 
 					}
 
-					if ( foundModDefinition )
+					if (foundModDefinition)
 					{
 						// Extract mod to the mods folder
-						ZipFile.ExtractToDirectory( path, destinationFolder );
+						ZipFile.ExtractToDirectory(path, destinationFolder);
 
 						if (File.Exists(Path.Combine(destinationFolder, DisabledFileName)))
 						{
 							File.Delete(Path.Combine(destinationFolder, DisabledFileName));
 						}
 
-						if ( OnFinishedImportingMod != null )
+						if (OnFinishedImportingMod != null)
 						{
-							OnFinishedImportingMod( true, ModImportType.Mod, $"{modFolderName} imported successfully!" );
+							OnFinishedImportingMod(true, ModImportType.Mod, $"{modFolderName} imported successfully!");
 						}
 					}
-					else if( foundSaveFile )
+					else if (foundSaveFile)
 					{
 						// Extract saves to the saves folder
-						destinationFolder = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, SavesDirectory );
-						ZipFile.ExtractToDirectory( path, destinationFolder );
+						destinationFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SavesDirectory);
+						ZipFile.ExtractToDirectory(path, destinationFolder);
 
-						if ( OnFinishedImportingMod != null )
+						if (OnFinishedImportingMod != null)
 						{
-							OnFinishedImportingMod( true, ModImportType.Save, $"{modFolderName} imported to saves successfully!" );
+							OnFinishedImportingMod(true, ModImportType.Save, $"{modFolderName} imported to saves successfully!");
 						}
 					}
 					else
 					{
-						throw new Exception( "Mod was not a valid mod, nor a save file." );
+						throw new Exception("Mod was not a valid mod, nor a save file.");
 					}
 				}
-				catch( Exception e )
+				catch (Exception e)
 				{
-					if ( OnFinishedImportingMod != null )
+					if (OnFinishedImportingMod != null)
 					{
-						OnFinishedImportingMod( false, ModImportType.Invalid, $"An exception occurred while importing mod '{modFolderName}', {e.Message}" );
+						OnFinishedImportingMod(false, ModImportType.Invalid, $"An exception occurred while importing mod '{modFolderName}', {e.Message}");
 					}
 					return;
 				}
 			}
 		}
 
-		public static string PackageMod( string path )
+		public static string PackageMod(string path)
 		{
-			string exportPath = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, ModsDirectory, Path.GetFileName( path ) ) + ArchiveExtension;
-			string modDirectory = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, path );
+			string exportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory, Path.GetFileName(path)) + ArchiveExtension;
+			string modDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
 			string disabledFilePath = Path.Combine(modDirectory, DisabledFileName);
 			string errorMessage = null;
 
@@ -185,7 +188,7 @@ namespace Icepick.Mods
 					File.Delete(disabledFilePath);
 				}
 
-				ZipFile.CreateFromDirectory( modDirectory, exportPath );
+				ZipFile.CreateFromDirectory(modDirectory, exportPath);
 
 				if (isDisabled)
 				{
@@ -193,7 +196,7 @@ namespace Icepick.Mods
 					File.Create(disabledFilePath).Close();
 				}
 			}
-			catch( Exception e )
+			catch (Exception e)
 			{
 				errorMessage = e.Message;
 			}
@@ -215,5 +218,84 @@ namespace Icepick.Mods
 			return false;
 		}
 
+		// From https://stackoverflow.com/a/29491927
+		public static FileSystemEventHandler Debounce(FileSystemEventHandler func, int milliseconds = 500)
+		{
+			CancellationTokenSource cancelTokenSource = null;
+
+			return (object sender, FileSystemEventArgs e) =>
+			{
+				cancelTokenSource?.Cancel();
+				cancelTokenSource = new CancellationTokenSource();
+
+				Task.Delay(milliseconds, cancelTokenSource.Token)
+					.ContinueWith(t =>
+					{
+						if (!t.IsCanceled)
+						{
+							func(sender, e);
+						}
+					}, TaskScheduler.Default);
+			};
+		}
+
+		public static void WatchModsFolder()
+		{
+			var modsFullDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory);
+			var watcher = new FileSystemWatcher(modsFullDirectory);
+			watcher.NotifyFilter = NotifyFilters.Attributes
+								 | NotifyFilters.CreationTime
+								 | NotifyFilters.DirectoryName
+								 | NotifyFilters.FileName
+								 | NotifyFilters.LastWrite;
+			watcher.Changed += Debounce(OnChanged);
+			watcher.Created += Debounce(OnChanged);
+			watcher.Deleted += Debounce(OnChanged);
+			watcher.Renamed += OnRenamed;
+
+			watcher.Filter = "*";
+			watcher.IncludeSubdirectories = true;
+			watcher.EnableRaisingEvents = true;
+		}
+
+		private static bool ShouldReloadMods(string fullPath)
+		{
+			if (fullPath.Contains("mod.json") || fullPath.Contains("disabled"))
+			{
+				return true;
+			}
+
+			var modsFullDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModsDirectory);
+			DirectoryInfo modDir = new DirectoryInfo(modsFullDirectory);
+			DirectoryInfo changeDir = new DirectoryInfo(fullPath);
+			if (changeDir.Parent.FullName == modDir.FullName)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private static void OnChanged(object sender, FileSystemEventArgs e)
+		{
+			if (ShouldReloadMods(e.FullPath))
+			{
+				if (OnModsChanged != null)
+				{
+					OnModsChanged();
+				}
+			}
+		}
+
+		private static void OnRenamed(object sender, RenamedEventArgs e)
+		{
+			if (ShouldReloadMods(e.FullPath) || ShouldReloadMods(e.OldFullPath))
+			{
+				if (OnModsChanged != null)
+				{
+					OnModsChanged();
+				}
+			}
+		}
 	}
 }

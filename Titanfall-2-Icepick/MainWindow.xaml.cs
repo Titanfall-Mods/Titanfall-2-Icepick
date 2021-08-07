@@ -45,7 +45,9 @@ namespace Icepick
 			ModDatabase.OnFinishedLoadingMods += ModDatabase_OnFinishedLoadingMods;
 			ModDatabase.OnModLoaded += ModDatabase_OnModLoaded;
 			ModDatabase.OnFinishedImportingMod += ModDatabase_OnFinishedImportingMod;
+			ModDatabase.OnModsChanged += ModDatabase_OnModsChanged;
 			ModDatabase.LoadAll();
+			ModDatabase.WatchModsFolder();
 
 			UpdateLauncherSelection();
 		}
@@ -123,6 +125,11 @@ namespace Icepick
 			{
 				AddEvent( $"Failed to import mod, {message}" );
 			}
+		}
+
+		private void ModDatabase_OnModsChanged()
+		{
+			this.Dispatcher.Invoke(ReloadModsList);
 		}
 
 		private void OpenTitanfallMods_Click( object sender, RoutedEventArgs e)
