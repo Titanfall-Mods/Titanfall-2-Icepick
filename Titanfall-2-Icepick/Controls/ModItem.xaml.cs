@@ -154,6 +154,28 @@ namespace Icepick.Controls
 			}
 		}
 
+		private void DeleteMod_Click(object sender, RoutedEventArgs e)
+		{
+			var name = Mod.Definition?.Name;
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				name = System.IO.Path.GetFileName(Mod.Directory);
+			}
+
+			var result = MessageBox.Show($"Do you want to delete \"{name}\"?", "Delete Mod", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+			if (result == MessageBoxResult.Yes)
+			{
+				try
+				{
+					Mods.ModDatabase.DeleteMod(Mod.Directory);
+				}
+				catch (Exception err)
+				{
+					MessageBox.Show($"Could not delete mod.\n{err.Message}", "Deletion Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				}
+			}
+		}
+
 		private void ToggleMod_Click(object sender, RoutedEventArgs e)
 		{
 			try

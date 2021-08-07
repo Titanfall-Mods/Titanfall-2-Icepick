@@ -218,8 +218,13 @@ namespace Icepick.Mods
 			return false;
 		}
 
+		public static void DeleteMod(string path)
+		{
+			Directory.Delete(path, true);
+		}
+
 		// From https://stackoverflow.com/a/29491927
-		public static FileSystemEventHandler Debounce(FileSystemEventHandler func, int milliseconds = 500)
+		private static FileSystemEventHandler Debounce(FileSystemEventHandler func, int milliseconds = 500)
 		{
 			CancellationTokenSource cancelTokenSource = null;
 

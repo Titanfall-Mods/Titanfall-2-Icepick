@@ -28,6 +28,7 @@
                 <MenuItem Header="Show in Explorer" Click="ShowInExplorer_Click" />
                 <Separator/>
                 <MenuItem x:Name="PackageModMenuItem" Header="Package Mod" Click="PackageMod_Click" />
+                <MenuItem x:Name="DeleteModMenuItem" Header="Delete Mod" Click="DeleteMod_Click" />
             </ContextMenu>
         </Grid.ContextMenu>
         <Grid.Style>
