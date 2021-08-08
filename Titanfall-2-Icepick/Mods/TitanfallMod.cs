@@ -26,7 +26,14 @@ namespace Icepick.Mods
 				reader.Close();
 				reader.Dispose();
 
-				Definition = JsonConvert.DeserializeObject<TitanfallModDefinition>( Contents );
+				try
+				{
+					Definition = JsonConvert.DeserializeObject<TitanfallModDefinition>(Contents);
+				}
+				catch
+				{
+
+				}
 			}
 			this.Directory = Directory;
 
